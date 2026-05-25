@@ -1,6 +1,6 @@
 export { Graph } from './Graph.js'
-export { defineFlow } from './defineFlow.js'
-export { makeFlow } from './makeFlow.js'
+export { defineGraph } from './defineGraph.js'
+export { makeGraph } from './makeGraph.js'
 
 export {
     EmptyGraphError,

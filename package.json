@@ -1,5 +1,5 @@
 {
-  "name": "flowcore",
+  "name": "flowlet",
   "version": "0.0.0",
   "description": "",
   "private": true,
@@ -13,24 +13,24 @@
     "build": "npm run build --workspaces",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
-    "docs:dev": "npm run dev -w @flowcore/docs",
-    "docs:build": "npm run build -w @flowcore/docs",
-    "docs:preview": "npm run preview -w @flowcore/docs",
-    "core:build": "npm run build -w @flowcore/core",
-    "core:typecheck": "npm run typecheck -w @flowcore/core",
-    "core:test": "npm run test -w @flowcore/core"
+    "docs:dev": "npm run dev -w @flowlet/docs",
+    "docs:build": "npm run build -w @flowlet/docs",
+    "docs:preview": "npm run preview -w @flowlet/docs",
+    "core:build": "npm run build -w @flowlet/core",
+    "core:typecheck": "npm run typecheck -w @flowlet/core",
+    "core:test": "npm run test -w @flowlet/core"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SicParv1sMagna/flowcore.git"
+    "url": "git+https://github.com/SicParv1sMagna/flowlet.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/SicParv1sMagna/flowcore/issues"
+    "url": "https://github.com/SicParv1sMagna/flowlet/issues"
   },
-  "homepage": "https://github.com/SicParv1sMagna/flowcore#readme",
+  "homepage": "https://github.com/SicParv1sMagna/flowlet#readme",
   "devDependencies": {
     "typescript": "^6.0.3"
   }

@@ -1,7 +1,7 @@
 import {GraphOptions, GraphSchema, InferNode} from "./types.js";
 import {Graph} from "./Graph.js";
 
-export function makeFlow<
+export function makeGraph<
     const Schema extends GraphSchema,
     Payload = unknown,
     Context = undefined,

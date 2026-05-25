@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import {defineFlow} from "../defineFlow.js";
-import {makeFlow} from "../makeFlow.js";
+import {defineGraph} from "../defineGraph.js";
+import {makeGraph} from "../makeGraph.js";
 import {Graph} from "../Graph.js";
 import {EmptyGraphError, InvalidInitialNodeError, UnknownNodeError} from "../errors.js";
 
-const schema = defineFlow({
+const schema = defineGraph({
     step1: ["step2", "step3"],
     step2: [],
     step3: ["step4", "step5"],
@@ -14,7 +14,7 @@ const schema = defineFlow({
 
 describe("Graph", () => {
     it("creates graph from schema", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: 'step1'
         })
 
@@ -22,13 +22,13 @@ describe("Graph", () => {
     })
 
     it("uses first node as initial node by default", () => {
-        const graph = makeFlow(schema);
+        const graph = makeGraph(schema);
 
         expect(graph.current()).toBe("step1");
     })
 
     it("uses provided initial node", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step3"
         });
 
@@ -36,7 +36,7 @@ describe("Graph", () => {
     });
 
     it("returns all nodes", () => {
-        const graph = makeFlow(schema);
+        const graph = makeGraph(schema);
 
         expect(graph.getNodes()).toEqual([
             "step1",
@@ -48,7 +48,7 @@ describe("Graph", () => {
     });
 
     it("returns next nodes for current node", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -56,19 +56,19 @@ describe("Graph", () => {
     });
 
     it("returns next nodes for provided node", () => {
-        const graph = makeFlow(schema);
+        const graph = makeGraph(schema);
 
         expect(graph.getNext("step3")).toEqual(["step4", "step5"]);
     });
 
     it("returns empty next nodes for terminal node", () => {
-        const graph = makeFlow(schema);
+        const graph = makeGraph(schema);
 
         expect(graph.getNext("step2")).toEqual([]);
     });
 
     it("returns graph edges", () => {
-        const graph = makeFlow(schema);
+        const graph = makeGraph(schema);
 
         expect(graph.getEdges()).toEqual([
             ["step1", "step2"],
@@ -80,20 +80,20 @@ describe("Graph", () => {
     });
 
     it("checks if node exists", () => {
-        const graph = makeFlow(schema);
+        const graph = makeGraph(schema);
 
         expect(graph.hasNode("step1")).toBe(true);
         expect(graph.hasNode("unknown")).toBe(false);
     });
 
     it("throws when asserting unknown node", () => {
-        const graph = makeFlow(schema);
+        const graph = makeGraph(schema);
 
         expect(() => graph.assertNode("unknown")).toThrow(UnknownNodeError);
     });
 
     it("returns current snapshot", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -106,14 +106,14 @@ describe("Graph", () => {
     });
 
     it("checks transition between two nodes", () => {
-        const graph = makeFlow(schema);
+        const graph = makeGraph(schema);
 
         expect(graph.canGo("step1", "step2")).toBe(true);
         expect(graph.canGo("step1", "step5")).toBe(false);
     });
 
     it("checks transition from current node", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -122,7 +122,7 @@ describe("Graph", () => {
     });
 
     it("moves to allowed node", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -143,7 +143,7 @@ describe("Graph", () => {
             source: "button" | "keyboard";
         };
 
-        const graph = makeFlow<typeof schema, Payload>(schema, {
+        const graph = makeGraph<typeof schema, Payload>(schema, {
             initial: "step1"
         });
 
@@ -163,7 +163,7 @@ describe("Graph", () => {
     });
 
     it("does not move to unknown node", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -180,7 +180,7 @@ describe("Graph", () => {
     });
 
     it("does not move through disallowed transition", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -197,7 +197,7 @@ describe("Graph", () => {
     });
 
     it("resets to initial node", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -218,7 +218,7 @@ describe("Graph", () => {
     });
 
     it("notifies listener on subscribe", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -242,7 +242,7 @@ describe("Graph", () => {
     });
 
     it("notifies listener on transition", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -272,7 +272,7 @@ describe("Graph", () => {
     });
 
     it("notifies listener on reset", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -299,7 +299,7 @@ describe("Graph", () => {
     });
 
     it("unsubscribes listener", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -315,20 +315,20 @@ describe("Graph", () => {
 
     it("throws when graph is empty", () => {
         expect(() => {
-            makeFlow({});
+            makeGraph({});
         }).toThrow(EmptyGraphError);
     });
 
     it("throws when initial node does not exist", () => {
         expect(() => {
-            makeFlow(schema, {
+            makeGraph(schema, {
                 initial: "unknown" as never
             });
         }).toThrow(InvalidInitialNodeError);
     });
 
     it("throws when getting next nodes for unknown node", () => {
-        const graph = makeFlow(schema);
+        const graph = makeGraph(schema);
 
         expect(() => {
             graph.getNext("unknown" as never);

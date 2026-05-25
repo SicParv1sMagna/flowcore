@@ -1,5 +1,5 @@
 {
-  "name": "@flowcore/docs",
+  "name": "@flowlet/docs",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +8,7 @@
     "preview": "vitepress preview ."
   },
   "dependencies": {
-    "@flowcore/core": "*"
+    "@flowlet/core": "*"
   },
   "devDependencies": {
     "vitepress": "^1.6.0"

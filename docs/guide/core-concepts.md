@@ -1,13 +1,13 @@
 # Core Concepts
 
-Flowcore is based on a few small concepts.
+Flowlet is based on a few small concepts.
 
 ## Graph schema
 
 A graph schema is an object where every key is a node and every value is a list of outgoing nodes.
 
 ```typescript
-const schema = defineFlow({
+const schema = defineGraph({
     step1: ["step2", "step3"],
     step2: [],
     step3: ["step1"]
@@ -26,7 +26,7 @@ step3 -> step1
 A node is a key in your schema.
 
 ```typescript
-const schema = defineFlow({
+const schema = defineGraph({
     idle: ["active"],
     active: [],
 })
@@ -39,7 +39,7 @@ Here, `idle` and `active` are nodes.
 An edge is a connection from one node to another.
 
 ```typescript
-const schema = defineFlow({
+const schema = defineGraph({
     idle: ["active"]
 })
 ```

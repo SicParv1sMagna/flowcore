@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { defineFlow, makeFlow } from "../index.js";
+import { defineGraph, makeGraph } from "../index.js";
 
-const schema = defineFlow({
+const schema = defineGraph({
     step1: ["step2", "step3"],
     step2: [],
     step3: []
@@ -19,7 +19,7 @@ type Context = {
 
 describe("Graph context", () => {
     it("stores initial context", () => {
-        const graph = makeFlow<typeof schema, Payload, Context>(schema, {
+        const graph = makeGraph<typeof schema, Payload, Context>(schema, {
             initial: "step1",
             context: {
                 values: {},
@@ -34,7 +34,7 @@ describe("Graph context", () => {
     });
 
     it("returns context in snapshot", () => {
-        const graph = makeFlow<typeof schema, Payload, Context>(schema, {
+        const graph = makeGraph<typeof schema, Payload, Context>(schema, {
             initial: "step1",
             context: {
                 values: {
@@ -60,7 +60,7 @@ describe("Graph context", () => {
     });
 
     it("updates context by value", () => {
-        const graph = makeFlow<typeof schema, Payload, Context>(schema, {
+        const graph = makeGraph<typeof schema, Payload, Context>(schema, {
             initial: "step1",
             context: {
                 values: {},
@@ -84,7 +84,7 @@ describe("Graph context", () => {
     });
 
     it("updates context by updater function", () => {
-        const graph = makeFlow<typeof schema, Payload, Context>(schema, {
+        const graph = makeGraph<typeof schema, Payload, Context>(schema, {
             initial: "step1",
             context: {
                 values: {},
@@ -104,7 +104,7 @@ describe("Graph context", () => {
     });
 
     it("notifies listener on context update", () => {
-        const graph = makeFlow<typeof schema, Payload, Context>(schema, {
+        const graph = makeGraph<typeof schema, Payload, Context>(schema, {
             initial: "step1",
             context: {
                 values: {},
@@ -149,7 +149,7 @@ describe("Graph context", () => {
     });
 
     it("keeps context after transition", () => {
-        const graph = makeFlow<typeof schema, Payload, Context>(schema, {
+        const graph = makeGraph<typeof schema, Payload, Context>(schema, {
             initial: "step1",
             context: {
                 values: {

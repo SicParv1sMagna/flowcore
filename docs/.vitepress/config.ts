@@ -1,7 +1,7 @@
 import { defineConfig } from "vitepress";
 
 export default defineConfig({
-    title: "Flowcore",
+    title: "Flowlet",
     description: "Typed headless graph runtime",
 
     themeConfig: {
@@ -24,8 +24,8 @@ export default defineConfig({
             {
                 text: "API",
                 items: [
-                    { text: "defineFlow", link: "/api/define-flow" },
-                    { text: "makeFlow", link: "/api/make-flow" },
+                    { text: "defineGraph", link: "/api/define-flow" },
+                    { text: "makeGraph", link: "/api/make-flow" },
                     { text: "Graph", link: "/api/graph" },
                 ]
             }
@@ -38,7 +38,7 @@ export default defineConfig({
         socialLinks: [
             {
                 icon: "github",
-                link: "https://github.com/SicParv1sMagna/flowcore"
+                link: "https://github.com/SicParv1sMagna/flowlet"
             }
         ]
     }

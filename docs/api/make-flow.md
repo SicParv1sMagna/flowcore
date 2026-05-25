@@ -1,15 +1,15 @@
-# makeFlow
+# makeGraph
 
 Creates a `Graph` runtime instance.
 
 ```ts
-const graph = makeFlow(schema, options);
+const graph = makeGraph(schema, options);
 ```
 
 ## Basic usage
 
 ```ts
-import { defineGraph, makeFlow } from "@flowcore/core";
+import { defineGraph, makeGraph } from "@flowlet/core";
 
 const schema = defineGraph({
   step1: ["step2", "step3"],
@@ -17,7 +17,7 @@ const schema = defineGraph({
   step3: []
 });
 
-const graph = makeFlow(schema, {
+const graph = makeGraph(schema, {
   initial: "step1"
 });
 ```
@@ -38,7 +38,7 @@ type Context = {
   completed: string[];
 };
 
-const graph = makeFlow<typeof schema, unknown, Context>(schema, {
+const graph = makeGraph<typeof schema, unknown, Context>(schema, {
   initial: "step1",
   context: {
     completed: []
@@ -48,7 +48,7 @@ const graph = makeFlow<typeof schema, unknown, Context>(schema, {
 
 ## Returns
 
-`makeFlow` returns an instance of `Graph`.
+`makeGraph` returns an instance of `Graph`.
 
 ```ts
 graph.current();

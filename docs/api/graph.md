@@ -2,10 +2,10 @@
 
 `Graph` is the core runtime class.
 
-Most users should create it with `makeFlow`.
+Most users should create it with `makeGraph`.
 
 ```ts
-const graph = makeFlow(schema, {
+const graph = makeGraph(schema, {
   initial: "step1"
 });
 ```

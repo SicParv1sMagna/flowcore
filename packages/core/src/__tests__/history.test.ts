@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { defineFlow, makeFlow } from "../index.js";
+import { defineGraph, makeGraph } from "../index.js";
 
-const schema = defineFlow({
+const schema = defineGraph({
     step1: ["step2", "step3"],
     step2: ["step4"],
     step3: [],
@@ -11,7 +11,7 @@ const schema = defineFlow({
 
 describe("Graph history", () => {
     it("starts history with initial node", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -19,7 +19,7 @@ describe("Graph history", () => {
     });
 
     it("adds nodes to history on transition", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -30,7 +30,7 @@ describe("Graph history", () => {
     });
 
     it("returns history copy", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -42,7 +42,7 @@ describe("Graph history", () => {
     });
 
     it("checks if graph can go back", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -54,7 +54,7 @@ describe("Graph history", () => {
     });
 
     it("goes back to previous node", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -75,7 +75,7 @@ describe("Graph history", () => {
     });
 
     it("does not go back when history is empty", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -91,7 +91,7 @@ describe("Graph history", () => {
     });
 
     it("clears history and keeps current node", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -112,7 +112,7 @@ describe("Graph history", () => {
     });
 
     it("resets history on reset", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -132,7 +132,7 @@ describe("Graph history", () => {
     });
 
     it("notifies listener on back", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 
@@ -158,7 +158,7 @@ describe("Graph history", () => {
     });
 
     it("notifies listener on history clear", () => {
-        const graph = makeFlow(schema, {
+        const graph = makeGraph(schema, {
             initial: "step1"
         });
 

@@ -1,17 +1,17 @@
-# Flowcore
+# Flowlet
 
 Typed headless graph runtime for building graph-based flows.
 
 ```ts
-import { defineFlow, makeFlow } from "@flowcore/core";
+import { defineGraph, makeGraph } from "@flowlet/core";
 
-const schema = defineFlow({
+const schema = defineGraph({
   step1: ["step2", "step3"],
   step2: [],
   step3: []
 });
 
-const flow = makeFlow(schema, {
+const flow = makeGraph(schema, {
   initial: "step1"
 });
 

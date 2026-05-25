@@ -1,6 +1,6 @@
 # Getting Started
 
-Flowcore is a small headless graph runtime.
+Flowlet is a small headless graph runtime.
 
 It does not render UI and does not depend on any framework. You defined graph, create a runtime instance and move through
 nodes.
@@ -8,15 +8,15 @@ nodes.
 ## Install
 
 ```bash
-npm install @flowcore/core
+npm install @flowlet/core
 ```
 
 ## Define a graph
 
 ```typescript
-import { defineFlow, makeFlow } from "@flowcore/core";
+import { defineGraph, makeGraph } from "@flowlet/core";
 
-const schema = defineFlow({
+const schema = defineGraph({
     step1: ["step2", "step3"],
     step2: [],
     step3: ["step4", "step5"],
@@ -25,12 +25,12 @@ const schema = defineFlow({
 })
 ```
 
-`defineFlow` preserves literal node names and helps TypeScript infer the graph shape.
+`defineGraph` preserves literal node names and helps TypeScript infer the graph shape.
 
 ## Create a runtime
 
 ```typescript
-const flow = makeFlow(schema, {
+const flow = makeGraph(schema, {
     initial: "step1"
 })
 ```
@@ -53,7 +53,7 @@ flow.current();
 
 ## Invalid transitions
 
-Flowcore only allows transitions that exist in your graph.
+Flowlet only allows transitions that exist in your graph.
 
 ```typescript
 graph.goTo("step2");

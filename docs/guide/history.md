@@ -1,13 +1,13 @@
 # History
 
-Flowcore keeps a history of visited nodes.
+Flowlet keeps a history of visited nodes.
 
 History is useful for wizard-like flows, screen graphs and back navigation.
 
 ## Read history
 
 ```typescript
-const flow = makeFlow(schema, {
+const flow = makeGraph(schema, {
     inital: "step1"
 });
 

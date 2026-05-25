@@ -2,14 +2,14 @@
 
 Context is user-defined data stored inside the graph runtime.
 
-Flowcore does not interpret context. It only stores it, returns it in snapshots and notifies listeners when it changes.
+Flowlet does not interpret context. It only stores it, returns it in snapshots and notifies listeners when it changes.
 
 ## Create graph with context
 
 ```typescript
-import { defineFlow, makeFlow } from "@flowcore/core";
+import { defineGraph, makeGraph } from "@flowlet/core";
 
-const schema = defineFlow({
+const schema = defineGraph({
     step1: ["step2"],
     step2: []
 });
@@ -19,7 +19,7 @@ type Context = {
     completed: string[];
 };
 
-const flow = makeFlow<typeof schema, unknown, Context>(schema, {
+const flow = makeGraph<typeof schema, unknown, Context>(schema, {
     initial: "step1",
     context: {
         values: {},
