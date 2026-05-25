@@ -1,14 +1,17 @@
-import {GraphOptions, GraphSchema, InferNode} from "./types.js";
+import {GraphEntries, GraphOptions } from "./types.js";
 import {Graph} from "./Graph.js";
 
 export function makeGraph<
-    const Schema extends GraphSchema,
+    const Entries extends GraphEntries<unknown>,
     Payload = unknown,
     Context = undefined,
-    Node extends InferNode<Schema> = InferNode<Schema>
+    Node = Entries[number][0]
 >(
-    schema: Schema,
-    options: GraphOptions<InferNode<Schema>, Context> = {}
+    entries: Entries,
+    options: GraphOptions<Node, Context> = {}
 ) {
-    return new Graph<Schema, Payload, Context>(schema, options);
+    return new Graph<Node, Payload, Context>(
+        entries as GraphEntries<Node>,
+        options
+    )
 }

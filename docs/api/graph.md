@@ -2,12 +2,51 @@
 
 `Graph` is the core runtime class.
 
-Most users should create it with `makeGraph`.
+```ts
+import { Graph } from "@graphlet/core";
+
+const graph = new Graph(
+  [
+    ["step1", ["step2"]],
+    ["step2", []]
+  ] as const,
+  {
+    initial: "step1"
+  }
+);
+```
+
+## Constructor
 
 ```ts
-const graph = makeGraph(schema, {
-  initial: "step1"
-});
+new Graph(entries, options);
+```
+
+## Entries
+
+```ts
+[
+  [node, nextNodes]
+]
+```
+
+Example:
+
+```ts
+[
+  ["step1", ["step2", "step3"]],
+  ["step2", []],
+  ["step3", []]
+]
+```
+
+## Options
+
+```ts
+{
+  initial?: Node;
+  context?: Context;
+}
 ```
 
 ## current
@@ -203,7 +242,7 @@ graph.clearHistory();
 
 ## reset
 
-Returns graph to initial node.
+Returns graph to initial node and resets history.
 
 ```ts
 graph.reset();
@@ -215,8 +254,8 @@ Subscribes to graph changes.
 
 ```ts
 const unsubscribe = graph.subscribe((snapshot, event) => {
-  console.log(snapshot);
-  console.log(event);
+    console.log(snapshot);
+    console.log(event);
 });
 
 unsubscribe();

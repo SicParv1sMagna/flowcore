@@ -8,97 +8,72 @@ import type {
     BackResult,
     ContextUpdater,
     GoToResult,
+    GraphEntries,
     GraphEvent,
     GraphListener,
     GraphOptions,
-    GraphSchema,
-    GraphSnapshot,
-    InferNode,
-    NextOf
+    GraphSnapshot
 } from "./types.js";
 
-export class Graph<
-    const Schema extends GraphSchema,
-    Payload = unknown,
-    Context = undefined
-> {
-    private readonly adjacency = new Map<
-        InferNode<Schema>,
-        Array<InferNode<Schema>>
-    >();
+export class Graph<Node, Payload = unknown, Context = undefined> {
+    private readonly adjacency = new Map<Node, Node[]>();
+    private readonly initial: Node;
 
-    private readonly initial: InferNode<Schema>;
-
-    private currentNode: InferNode<Schema>;
+    private currentNode: Node;
     private currentContext: Context;
-
-    private readonly history: Array<InferNode<Schema>>;
+    private readonly history: Node[];
 
     private readonly listeners = new Set<
-        GraphListener<InferNode<Schema>, Payload, Context>
+        GraphListener<Node, Payload, Context>
     >();
 
     constructor(
-        schema: Schema,
-        options: GraphOptions<InferNode<Schema>, Context> = {}
+        entries: GraphEntries<Node>,
+        options: GraphOptions<Node, Context> = {}
     ) {
-        const nodes = Object.keys(schema) as Array<InferNode<Schema>>;
-
-        for (const node of nodes) {
-            this.adjacency.set(
-                node,
-                [...schema[node]] as Array<InferNode<Schema>>
-            );
+        for (const [node, next] of entries) {
+            this.adjacency.set(node, [...next]);
         }
 
-        const initial = options.initial ?? nodes[0];
+        const firstNode = entries[0]?.[0];
+        const initial = options.initial ?? firstNode;
 
-        if (!initial) {
+        if (initial === undefined) {
             throw new EmptyGraphError();
         }
 
         if (!this.adjacency.has(initial)) {
-            throw new InvalidInitialNodeError(initial);
+            throw new InvalidInitialNodeError(String(initial));
         }
 
         this.initial = initial;
         this.currentNode = initial;
-        this.history = [initial];
         this.currentContext = options.context as Context;
+        this.history = [initial];
     }
 
-    hasNode(node: string): node is InferNode<Schema> {
-        return this.adjacency.has(node as InferNode<Schema>);
+    hasNode(node: Node): boolean {
+        return this.adjacency.has(node);
     }
 
-    assertNode(node: string): asserts node is InferNode<Schema> {
+    assertNode(node: Node): void {
         if (!this.hasNode(node)) {
-            throw new UnknownNodeError(node);
+            throw new UnknownNodeError(String(node));
         }
     }
 
-    getNodes(): Array<InferNode<Schema>> {
+    getNodes(): Node[] {
         return [...this.adjacency.keys()];
     }
 
-    getNext(): Array<InferNode<Schema>>;
+    getNext(node = this.currentNode): Node[] {
+        this.assertNode(node);
 
-    getNext<From extends InferNode<Schema>>(
-        node: From
-    ): Array<NextOf<Schema, From>>;
-
-    getNext<From extends InferNode<Schema>>(
-        node?: From
-    ): Array<InferNode<Schema>> | Array<NextOf<Schema, From>> {
-        const resolvedNode = node ?? this.currentNode;
-
-        this.assertNode(resolvedNode);
-
-        return [...(this.adjacency.get(resolvedNode) ?? [])];
+        return [...(this.adjacency.get(node) ?? [])];
     }
 
-    getEdges(): Array<[InferNode<Schema>, InferNode<Schema>]> {
-        const edges: Array<[InferNode<Schema>, InferNode<Schema>]> = [];
+    getEdges(): Array<[Node, Node]> {
+        const edges: Array<[Node, Node]> = [];
 
         for (const [from, targets] of this.adjacency.entries()) {
             for (const to of targets) {
@@ -109,7 +84,7 @@ export class Graph<
         return edges;
     }
 
-    current(): InferNode<Schema> {
+    current(): Node {
         return this.currentNode;
     }
 
@@ -117,35 +92,28 @@ export class Graph<
         return this.currentContext;
     }
 
-    getSnapshot(): GraphSnapshot<InferNode<Schema>, Context> {
+    getHistory(): Node[] {
+        return [...this.history];
+    }
+
+    getSnapshot(): GraphSnapshot<Node, Context> {
         return {
             current: this.currentNode,
             next: this.getNext(),
             context: this.currentContext,
-            history: this.getHistory(),
+            history: this.getHistory()
         };
     }
 
-    getHistory(): Array<InferNode<Schema>> {
-        return [...this.history];
-    }
-
-    canGoBack(): boolean {
-        return this.history.length > 1;
-    }
-
-    canGo(from: InferNode<Schema>, to: InferNode<Schema>): boolean {
+    canGo(from: Node, to: Node): boolean {
         return this.adjacency.get(from)?.includes(to) ?? false;
     }
 
-    canGoTo(to: InferNode<Schema>): boolean {
+    canGoTo(to: Node): boolean {
         return this.canGo(this.currentNode, to);
     }
 
-    goTo(
-        to: InferNode<Schema>,
-        payload?: Payload
-    ): GoToResult<InferNode<Schema>, Payload> {
+    goTo(to: Node, payload?: Payload): GoToResult<Node, Payload> {
         if (!this.hasNode(to)) {
             return {
                 ok: false,
@@ -167,17 +135,16 @@ export class Graph<
         }
 
         const from = this.currentNode;
+
         this.currentNode = to;
         this.history.push(to);
 
-        const event: GraphEvent<InferNode<Schema>, Payload, Context> = {
+        this.notify({
             type: "transition",
             from,
             to,
             payload
-        };
-
-        this.notify(event);
+        });
 
         return {
             ok: true,
@@ -188,68 +155,11 @@ export class Graph<
         };
     }
 
-    back(): BackResult<InferNode<Schema>> {
-        if (!this.canGoBack()) {
-            return {
-                ok: false,
-                reason: "EMPTY_HISTORY",
-                current: this.currentNode,
-            }
-        }
-
-        const from = this.currentNode;
-
-        this.history.pop();
-
-        const previous = this.history[this.history.length - 1];
-
-        if (!previous) {
-            return {
-                ok: false,
-                reason: "EMPTY_HISTORY",
-                current: this.currentNode,
-            }
-        }
-
-        this.currentNode = previous;
-
-        this.notify({
-            type: "back",
-            from,
-            to: this.currentNode,
-        })
-
-        return {
-            ok: true,
-            from,
-            to: this.currentNode,
-            current: this.currentNode,
-        }
-    }
-
-    clearHistory(): GraphSnapshot<InferNode<Schema>, Context> {
-        this.history.length = 0;
-        this.history.push(this.currentNode);
-
-        this.notify({
-            type: "history.clear",
-            current: this.currentNode,
-        })
-
-        return this.getSnapshot()
-    }
-
-    setContext(
-        context: Context
-    ): GraphSnapshot<InferNode<Schema>, Context>;
-
-    setContext(
-        updater: ContextUpdater<Context>
-    ): GraphSnapshot<InferNode<Schema>, Context>;
-
+    setContext(context: Context): GraphSnapshot<Node, Context>;
+    setContext(updater: ContextUpdater<Context>): GraphSnapshot<Node, Context>;
     setContext(
         nextContextOrUpdater: Context | ContextUpdater<Context>
-    ): GraphSnapshot<InferNode<Schema>, Context> {
+    ): GraphSnapshot<Node, Context> {
         const previousContext = this.currentContext;
 
         this.currentContext =
@@ -267,10 +177,65 @@ export class Graph<
         return this.getSnapshot();
     }
 
-    reset(): GraphSnapshot<InferNode<Schema>, Context> {
-        const from = this.currentNode;
-        this.currentNode = this.initial;
+    canGoBack(): boolean {
+        return this.history.length > 1;
+    }
 
+    back(): BackResult<Node> {
+        if (!this.canGoBack()) {
+            return {
+                ok: false,
+                reason: "EMPTY_HISTORY",
+                current: this.currentNode
+            };
+        }
+
+        const from = this.currentNode;
+
+        this.history.pop();
+
+        const previous = this.history[this.history.length - 1];
+
+        if (previous === undefined) {
+            return {
+                ok: false,
+                reason: "EMPTY_HISTORY",
+                current: this.currentNode
+            };
+        }
+
+        this.currentNode = previous;
+
+        this.notify({
+            type: "back",
+            from,
+            to: this.currentNode
+        });
+
+        return {
+            ok: true,
+            from,
+            to: this.currentNode,
+            current: this.currentNode
+        };
+    }
+
+    clearHistory(): GraphSnapshot<Node, Context> {
+        this.history.length = 0;
+        this.history.push(this.currentNode);
+
+        this.notify({
+            type: "history.clear",
+            current: this.currentNode
+        });
+
+        return this.getSnapshot();
+    }
+
+    reset(): GraphSnapshot<Node, Context> {
+        const from = this.currentNode;
+
+        this.currentNode = this.initial;
         this.history.length = 0;
         this.history.push(this.initial);
 
@@ -283,9 +248,7 @@ export class Graph<
         return this.getSnapshot();
     }
 
-    subscribe(
-        listener: GraphListener<InferNode<Schema>, Payload, Context>
-    ): () => void {
+    subscribe(listener: GraphListener<Node, Payload, Context>): () => void {
         this.listeners.add(listener);
 
         listener(this.getSnapshot(), {
@@ -298,9 +261,7 @@ export class Graph<
         };
     }
 
-    private notify(
-        event: GraphEvent<InferNode<Schema>, Payload, Context>
-    ): void {
+    private notify(event: GraphEvent<Node, Payload, Context>): void {
         const snapshot = this.getSnapshot();
 
         for (const listener of this.listeners) {

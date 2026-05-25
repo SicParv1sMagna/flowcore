@@ -1,0 +1,46 @@
+{
+  "name": "@graphlet/react",
+  "version": "0.0.1",
+  "description": "React adapter for Graphlet",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "react",
+    "graph",
+    "flow",
+    "headless",
+    "typescript"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "dependencies": {
+    "@graphlet/core": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^6.0.3"
+  }
+}

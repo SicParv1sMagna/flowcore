@@ -1,34 +1,39 @@
 import { describe, expect, it, vi } from "vitest";
-import {defineGraph} from "../defineGraph.js";
-import {makeGraph} from "../makeGraph.js";
-import {Graph} from "../Graph.js";
-import {EmptyGraphError, InvalidInitialNodeError, UnknownNodeError} from "../errors.js";
 
-const schema = defineGraph({
-    step1: ["step2", "step3"],
-    step2: [],
-    step3: ["step4", "step5"],
-    step4: ["step1"],
-    step5: []
-});
+import {
+    EmptyGraphError,
+    Graph,
+    InvalidInitialNodeError,
+    UnknownNodeError
+} from "../index.js";
+
+const entries = [
+    ["step1", ["step2", "step3"]],
+    ["step2", []],
+    ["step3", ["step4", "step5"]],
+    ["step4", ["step1"]],
+    ["step5", []]
+] as const;
+
+type Node = (typeof entries)[number][0];
 
 describe("Graph", () => {
-    it("creates graph from schema", () => {
-        const graph = makeGraph(schema, {
-            initial: 'step1'
-        })
+    it("creates graph from entries", () => {
+        const graph = new Graph<Node>(entries, {
+            initial: "step1"
+        });
 
         expect(graph).toBeInstanceOf(Graph);
-    })
+    });
 
     it("uses first node as initial node by default", () => {
-        const graph = makeGraph(schema);
+        const graph = new Graph<Node>(entries);
 
         expect(graph.current()).toBe("step1");
-    })
+    });
 
     it("uses provided initial node", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step3"
         });
 
@@ -36,7 +41,7 @@ describe("Graph", () => {
     });
 
     it("returns all nodes", () => {
-        const graph = makeGraph(schema);
+        const graph = new Graph<Node>(entries);
 
         expect(graph.getNodes()).toEqual([
             "step1",
@@ -48,7 +53,7 @@ describe("Graph", () => {
     });
 
     it("returns next nodes for current node", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -56,19 +61,19 @@ describe("Graph", () => {
     });
 
     it("returns next nodes for provided node", () => {
-        const graph = makeGraph(schema);
+        const graph = new Graph<Node>(entries);
 
         expect(graph.getNext("step3")).toEqual(["step4", "step5"]);
     });
 
     it("returns empty next nodes for terminal node", () => {
-        const graph = makeGraph(schema);
+        const graph = new Graph<Node>(entries);
 
         expect(graph.getNext("step2")).toEqual([]);
     });
 
     it("returns graph edges", () => {
-        const graph = makeGraph(schema);
+        const graph = new Graph<Node>(entries);
 
         expect(graph.getEdges()).toEqual([
             ["step1", "step2"],
@@ -80,20 +85,20 @@ describe("Graph", () => {
     });
 
     it("checks if node exists", () => {
-        const graph = makeGraph(schema);
+        const graph = new Graph<Node>(entries);
 
         expect(graph.hasNode("step1")).toBe(true);
-        expect(graph.hasNode("unknown")).toBe(false);
+        expect(graph.hasNode("unknown" as Node)).toBe(false);
     });
 
     it("throws when asserting unknown node", () => {
-        const graph = makeGraph(schema);
+        const graph = new Graph<Node>(entries);
 
-        expect(() => graph.assertNode("unknown")).toThrow(UnknownNodeError);
+        expect(() => graph.assertNode("unknown" as Node)).toThrow(UnknownNodeError);
     });
 
     it("returns current snapshot", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -106,14 +111,14 @@ describe("Graph", () => {
     });
 
     it("checks transition between two nodes", () => {
-        const graph = makeGraph(schema);
+        const graph = new Graph<Node>(entries);
 
         expect(graph.canGo("step1", "step2")).toBe(true);
         expect(graph.canGo("step1", "step5")).toBe(false);
     });
 
     it("checks transition from current node", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -122,7 +127,7 @@ describe("Graph", () => {
     });
 
     it("moves to allowed node", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -143,7 +148,7 @@ describe("Graph", () => {
             source: "button" | "keyboard";
         };
 
-        const graph = makeGraph<typeof schema, Payload>(schema, {
+        const graph = new Graph<Node, Payload>(entries, {
             initial: "step1"
         });
 
@@ -163,11 +168,11 @@ describe("Graph", () => {
     });
 
     it("does not move to unknown node", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
-        const result = graph.goTo("unknown" as never);
+        const result = graph.goTo("unknown" as Node);
 
         expect(result).toEqual({
             ok: false,
@@ -180,7 +185,7 @@ describe("Graph", () => {
     });
 
     it("does not move through disallowed transition", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -197,7 +202,7 @@ describe("Graph", () => {
     });
 
     it("resets to initial node", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -208,9 +213,9 @@ describe("Graph", () => {
         const snapshot = graph.reset();
 
         expect(snapshot).toEqual({
-            context: undefined,
             current: "step1",
             next: ["step2", "step3"],
+            context: undefined,
             history: ["step1"]
         });
 
@@ -218,7 +223,7 @@ describe("Graph", () => {
     });
 
     it("notifies listener on subscribe", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -231,8 +236,8 @@ describe("Graph", () => {
             {
                 current: "step1",
                 next: ["step2", "step3"],
-                history: ["step1"],
-                context: undefined
+                context: undefined,
+                history: ["step1"]
             },
             {
                 type: "init",
@@ -242,7 +247,7 @@ describe("Graph", () => {
     });
 
     it("notifies listener on transition", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -258,7 +263,8 @@ describe("Graph", () => {
             {
                 current: "step3",
                 next: ["step4", "step5"],
-                history: ["step1", "step3"],
+                context: undefined,
+                history: ["step1", "step3"]
             },
             {
                 type: "transition",
@@ -272,7 +278,7 @@ describe("Graph", () => {
     });
 
     it("notifies listener on reset", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -285,9 +291,9 @@ describe("Graph", () => {
         expect(listener).toHaveBeenCalledTimes(3);
         expect(listener).toHaveBeenLastCalledWith(
             {
-                context: undefined,
                 current: "step1",
                 next: ["step2", "step3"],
+                context: undefined,
                 history: ["step1"]
             },
             {
@@ -299,7 +305,7 @@ describe("Graph", () => {
     });
 
     it("unsubscribes listener", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -315,23 +321,23 @@ describe("Graph", () => {
 
     it("throws when graph is empty", () => {
         expect(() => {
-            makeGraph({});
+            new Graph<never>([]);
         }).toThrow(EmptyGraphError);
     });
 
     it("throws when initial node does not exist", () => {
         expect(() => {
-            makeGraph(schema, {
-                initial: "unknown" as never
+            new Graph<Node>(entries, {
+                initial: "unknown" as Node
             });
         }).toThrow(InvalidInitialNodeError);
     });
 
     it("throws when getting next nodes for unknown node", () => {
-        const graph = makeGraph(schema);
+        const graph = new Graph<Node>(entries);
 
         expect(() => {
-            graph.getNext("unknown" as never);
+            graph.getNext("unknown" as Node);
         }).toThrow(UnknownNodeError);
     });
-})
+});

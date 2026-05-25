@@ -18,7 +18,9 @@
     "docs:preview": "npm run preview -w @graphlet/docs",
     "core:build": "npm run build -w @graphlet/core",
     "core:typecheck": "npm run typecheck -w @graphlet/core",
-    "core:test": "npm run test -w @graphlet/core"
+    "core:test": "npm run test -w @graphlet/core",
+    "react:build": "npm run build -w @graphlet/react",
+    "react:typecheck": "npm run build -w @graphlet/react"
   },
   "repository": {
     "type": "git",

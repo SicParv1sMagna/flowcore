@@ -1,85 +1,92 @@
 # Core Concepts
 
-Graphlet is based on a few small concepts.
+Graphlet is based on a small set of concepts.
 
-## Graph schema
+## Graph entries
 
-A graph schema is an object where every key is a node and every value is a list of outgoing nodes.
+A graph is defined as an array of entries.
 
-```typescript
-const schema = defineGraph({
-    step1: ["step2", "step3"],
-    step2: [],
-    step3: ["step1"]
-})
+```ts
+const entries = [
+  ["idle", ["active"]],
+  ["active", ["done"]],
+  ["done", []]
+] as const;
 ```
 
-This means:
-```text
-step1 -> step2
-step1 -> step3
-step3 -> step1
+Every entry has this shape:
+
+```ts
+[node, nextNodes]
 ```
 
 ## Node
 
-A node is a key in your schema.
+A node is any value in your graph.
 
-```typescript
-const schema = defineGraph({
-    idle: ["active"],
-    active: [],
-})
+In simple TypeScript flows, nodes are often strings:
+
+```ts
+["idle", ["active"]]
 ```
 
-Here, `idle` and `active` are nodes.
+In React flows, nodes can be components:
 
-## Edges
+```tsx
+[IntroScreen, [FormScreen]]
+```
+
+## Edge
 
 An edge is a connection from one node to another.
 
-```typescript
-const schema = defineGraph({
-    idle: ["active"]
-})
+```ts
+["idle", ["active", "cancelled"]]
 ```
 
-Here, `idle -> active` is an edge.
+This means:
+
+```txt
+idle -> active
+idle -> cancelled
+```
 
 ## Current node
 
 The runtime keeps track of the current node.
 
-```typescript
-flow.current();
+```ts
+graph.current();
 ```
 
-## Transtition
+## Transition
 
 A transition moves the runtime from the current node to another node.
 
-```typescript
-flow.goTo("active");
+```ts
+graph.goTo("active");
 ```
 
 The transition succeeds only if there is an edge from the current node to the target node.
 
-## Snapshot
+## Context
 
-A snapshot describes the current runtime state.
+Context is user-defined data stored in the graph runtime.
 
-```typescript
-flow.getSnapshot();
+```ts
+graph.getContext();
+graph.setContext(nextContext);
 ```
 
-Example:
+Graphlet does not interpret context.
 
-```json
-{
-    "current": "step1",
-    "next": ["step2", "step3"],
-    "context": undefined,
-    "history": ["step1"]
-}
+## History
 
+Graphlet stores visited nodes.
+
+```ts
+graph.getHistory();
+graph.back();
 ```
+
+This is useful for screen flows, wizards and multi-step interfaces.

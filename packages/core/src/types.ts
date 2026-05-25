@@ -1,86 +1,71 @@
-export type GraphSchema = Record<string, readonly string[]>;
+export type GraphNode = unknown;
 
-export type InferNode<Schema extends GraphSchema> = keyof Schema & string;
+export type GraphEntries<Node> = ReadonlyArray<
+    readonly [Node, readonly Node[]]
+>;
 
-export type ValidateTargets<Schema extends GraphSchema> = {
-    [Node in keyof Schema]: readonly (keyof Schema & string)[];
-};
-
-export type NextOf<
-    Schema extends GraphSchema,
-    Node extends keyof Schema & string
-> = Schema[Node][number] & string;
-
-export type GraphOptions<Node extends string, Context = unknown> = {
+export type GraphOptions<Node, Context = undefined> = {
     initial?: Node;
     context?: Context;
 };
 
-export type GraphSnapshot<Node extends string, Context = unknown> = {
+export type GraphSnapshot<Node, Context = undefined> = {
     current: Node;
     next: Node[];
     context: Context;
     history: Node[];
 };
 
-export type TransitionEvent<Node extends string, Payload = unknown> = {
+export type TransitionEvent<Node, Payload = unknown> = {
     type: "transition";
     from: Node;
     to: Node;
     payload?: Payload;
 };
 
-export type ResetEvent<Node extends string> = {
+export type ResetEvent<Node> = {
     type: "reset";
     from: Node;
     to: Node;
 };
 
-export type InitEvent<Node extends string> = {
+export type InitEvent<Node> = {
     type: "init";
     current: Node;
 };
 
-export type ContextUpdateEvent<Node extends string, Context = unknown> = {
+export type ContextUpdateEvent<Node, Context = undefined> = {
     type: "context";
     current: Node;
     previousContext: Context;
     context: Context;
 };
 
-export type BackEvent<Node extends string> = {
+export type BackEvent<Node> = {
     type: "back";
     from: Node;
     to: Node;
-}
+};
 
-export type HistoryClearEvent<Node extends string> = {
+export type HistoryClearEvent<Node> = {
     type: "history.clear";
     current: Node;
-}
+};
 
-export type GraphEvent<
-    Node extends string,
-    Payload = unknown,
-    Context = unknown
-> =
+export type GraphEvent<Node, Payload = unknown, Context = undefined> =
     | TransitionEvent<Node, Payload>
     | ResetEvent<Node>
     | InitEvent<Node>
     | ContextUpdateEvent<Node, Context>
     | BackEvent<Node>
-    | HistoryClearEvent<Node>
+    | HistoryClearEvent<Node>;
 
-export type GraphListener<
-    Node extends string,
-    Payload = unknown,
-    Context = unknown
-> = (
+export type GraphListener<Node, Payload = unknown, Context = undefined> = (
     snapshot: GraphSnapshot<Node, Context>,
     event: GraphEvent<Node, Payload, Context>
 ) => void;
 
-export type GoToSuccess<Node extends string, Payload = unknown> = {
+export type GoToSuccess<Node, Payload = unknown> = {
     ok: true;
     from: Node;
     to: Node;
@@ -88,7 +73,7 @@ export type GoToSuccess<Node extends string, Payload = unknown> = {
     payload?: Payload;
 };
 
-export type GoToFailure<Node extends string, Payload = unknown> = {
+export type GoToFailure<Node, Payload = unknown> = {
     ok: false;
     reason: "UNKNOWN_NODE" | "TRANSITION_NOT_ALLOWED";
     from: Node;
@@ -96,20 +81,21 @@ export type GoToFailure<Node extends string, Payload = unknown> = {
     payload?: Payload;
 };
 
-export type GoToResult<Node extends string, Payload = unknown> =
+export type GoToResult<Node, Payload = unknown> =
     | GoToSuccess<Node, Payload>
     | GoToFailure<Node, Payload>;
 
-export type BackResult<Node extends string> =
+export type BackResult<Node> =
     | {
-        ok: true;
-        from: Node;
-        to: Node;
-        current: Node;
-    } | {
-        ok: false;
-        reason: "EMPTY_HISTORY";
-        current: Node;
-    }
+    ok: true;
+    from: Node;
+    to: Node;
+    current: Node;
+}
+    | {
+    ok: false;
+    reason: "EMPTY_HISTORY";
+    current: Node;
+};
 
 export type ContextUpdater<Context> = (context: Context) => Context;

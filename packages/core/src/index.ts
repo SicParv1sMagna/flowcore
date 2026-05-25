@@ -1,13 +1,11 @@
-export { Graph } from './Graph.js'
-export { defineGraph } from './defineGraph.js'
-export { makeGraph } from './makeGraph.js'
+export { Graph } from "./Graph.js";
 
 export {
     EmptyGraphError,
     GraphError,
     InvalidInitialNodeError,
     UnknownNodeError
-} from './errors.js'
+} from "./errors.js";
 
 export type {
     BackEvent,
@@ -17,16 +15,13 @@ export type {
     GoToFailure,
     GoToResult,
     GoToSuccess,
+    GraphEntries,
     GraphEvent,
     GraphListener,
     GraphOptions,
-    GraphSchema,
     GraphSnapshot,
     HistoryClearEvent,
-    InferNode,
     InitEvent,
-    NextOf,
     ResetEvent,
-    TransitionEvent,
-    ValidateTargets
+    TransitionEvent
 } from "./types.js";

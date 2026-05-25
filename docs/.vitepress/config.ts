@@ -8,7 +8,8 @@ export default defineConfig({
     themeConfig: {
         nav: [
             { text: "Guide", link: "/guide/getting-started" },
-            { text: "API", link: "/api/make-flow" }
+            { text: "React", link: "/react/getting-started" },
+            { text: "API", link: "/api/graph" }
         ],
 
         sidebar: [
@@ -23,11 +24,19 @@ export default defineConfig({
                 ]
             },
             {
+                text: "React",
+                items: [
+                    { text: "Getting Started", link: "/react/getting-started" },
+                    { text: "Component Graphs", link: "/react/component-graphs" },
+                    { text: "GraphOutlet", link: "/react/graph-outlet" },
+                    { text: "Demo", link: "/react/demo" },
+                ]
+            },
+            {
                 text: "API",
                 items: [
-                    { text: "defineGraph", link: "/api/define-flow" },
-                    { text: "makeGraph", link: "/api/make-flow" },
                     { text: "Graph", link: "/api/graph" },
+                    { text: "React Adapter", link: "/api/react" },
                 ]
             }
         ],

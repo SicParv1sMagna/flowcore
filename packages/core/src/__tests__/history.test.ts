@@ -1,17 +1,19 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { defineGraph, makeGraph } from "../index.js";
+import { Graph } from "../index.js";
 
-const schema = defineGraph({
-    step1: ["step2", "step3"],
-    step2: ["step4"],
-    step3: [],
-    step4: []
-});
+const entries = [
+    ["step1", ["step2", "step3"]],
+    ["step2", ["step4"]],
+    ["step3", []],
+    ["step4", []]
+] as const;
+
+type Node = (typeof entries)[number][0];
 
 describe("Graph history", () => {
     it("starts history with initial node", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -19,7 +21,7 @@ describe("Graph history", () => {
     });
 
     it("adds nodes to history on transition", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -30,7 +32,7 @@ describe("Graph history", () => {
     });
 
     it("returns history copy", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -42,7 +44,7 @@ describe("Graph history", () => {
     });
 
     it("checks if graph can go back", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -54,7 +56,7 @@ describe("Graph history", () => {
     });
 
     it("goes back to previous node", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -75,7 +77,7 @@ describe("Graph history", () => {
     });
 
     it("does not go back when history is empty", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -91,7 +93,7 @@ describe("Graph history", () => {
     });
 
     it("clears history and keeps current node", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -112,7 +114,7 @@ describe("Graph history", () => {
     });
 
     it("resets history on reset", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -132,7 +134,7 @@ describe("Graph history", () => {
     });
 
     it("notifies listener on back", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
@@ -158,7 +160,7 @@ describe("Graph history", () => {
     });
 
     it("notifies listener on history clear", () => {
-        const graph = makeGraph(schema, {
+        const graph = new Graph<Node>(entries, {
             initial: "step1"
         });
 
