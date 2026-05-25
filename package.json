@@ -1,0 +1,37 @@
+{
+  "name": "flowcore",
+  "version": "0.0.0",
+  "description": "",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "docs"
+  ],
+  "scripts": {
+    "dev": "npm run docs:dev",
+    "build": "npm run build --workspaces",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "docs:dev": "npm run dev -w @flowcore/docs",
+    "docs:build": "npm run build -w @flowcore/docs",
+    "docs:preview": "npm run preview -w @flowcore/docs",
+    "core:build": "npm run build -w @flowcore/core",
+    "core:typecheck": "npm run typecheck -w @flowcore/core",
+    "core:test": "npm run test -w @flowcore/core"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SicParv1sMagna/flowcore.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SicParv1sMagna/flowcore/issues"
+  },
+  "homepage": "https://github.com/SicParv1sMagna/flowcore#readme",
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
