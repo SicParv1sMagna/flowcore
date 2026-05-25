@@ -1,6 +1,7 @@
 import { defineConfig } from "vitepress";
 
 export default defineConfig({
+    base: "/graphlet/",
     title: "graphlet",
     description: "Typed headless graph runtime",
 
