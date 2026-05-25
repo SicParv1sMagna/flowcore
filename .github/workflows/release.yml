@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "@flowlet/core@*"
+      - "@graphlet/core@*"
 
 permissions:
   contents: read
@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   publish:
-    name: Publish @flowlet/core
+    name: Publish @graphlet/core
     runs-on: ubuntu-latest
 
     environment: npm
@@ -40,4 +40,4 @@ jobs:
         run: npm run core:build
 
       - name: Publish to npm
-        run: npm publish -w @flowlet/core --provenance --access public
+        run: npm publish -w @graphlet/core --provenance --access public

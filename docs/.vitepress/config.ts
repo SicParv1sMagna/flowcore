@@ -1,7 +1,7 @@
 import { defineConfig } from "vitepress";
 
 export default defineConfig({
-    title: "Flowlet",
+    title: "graphlet",
     description: "Typed headless graph runtime",
 
     themeConfig: {
@@ -38,7 +38,7 @@ export default defineConfig({
         socialLinks: [
             {
                 icon: "github",
-                link: "https://github.com/SicParv1sMagna/flowlet"
+                link: "https://github.com/SicParv1sMagna/graphlet"
             }
         ]
     }

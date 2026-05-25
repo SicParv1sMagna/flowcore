@@ -1,6 +1,6 @@
 # Core Concepts
 
-Flowlet is based on a few small concepts.
+Graphlet is based on a few small concepts.
 
 ## Graph schema
 

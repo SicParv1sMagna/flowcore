@@ -1,5 +1,5 @@
 {
-  "name": "@flowlet/core",
+  "name": "@graphlet/core",
   "version": "0.0.1",
   "description": "Tiny headless graph runtime",
   "type": "module",

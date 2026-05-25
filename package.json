@@ -1,5 +1,5 @@
 {
-  "name": "flowlet",
+  "name": "graphlet",
   "version": "0.0.0",
   "description": "",
   "private": true,
@@ -13,24 +13,24 @@
     "build": "npm run build --workspaces",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
-    "docs:dev": "npm run dev -w @flowlet/docs",
-    "docs:build": "npm run build -w @flowlet/docs",
-    "docs:preview": "npm run preview -w @flowlet/docs",
-    "core:build": "npm run build -w @flowlet/core",
-    "core:typecheck": "npm run typecheck -w @flowlet/core",
-    "core:test": "npm run test -w @flowlet/core"
+    "docs:dev": "npm run dev -w @graphlet/docs",
+    "docs:build": "npm run build -w @graphlet/docs",
+    "docs:preview": "npm run preview -w @graphlet/docs",
+    "core:build": "npm run build -w @graphlet/core",
+    "core:typecheck": "npm run typecheck -w @graphlet/core",
+    "core:test": "npm run test -w @graphlet/core"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SicParv1sMagna/flowlet.git"
+    "url": "git+https://github.com/SicParv1sMagna/graphlet.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/SicParv1sMagna/flowlet/issues"
+    "url": "https://github.com/SicParv1sMagna/graphlet/issues"
   },
-  "homepage": "https://github.com/SicParv1sMagna/flowlet#readme",
+  "homepage": "https://github.com/SicParv1sMagna/graphlet#readme",
   "devDependencies": {
     "typescript": "^6.0.3"
   }

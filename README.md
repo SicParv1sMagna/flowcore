@@ -1,9 +1,9 @@
-# Flowlet
+# graphlet
 
 Typed headless graph runtime for building graph-based flows.
 
 ```ts
-import { defineGraph, makeGraph } from "@flowlet/core";
+import { defineGraph, makeGraph } from "@graphlet/core";
 
 const schema = defineGraph({
   step1: ["step2", "step3"],

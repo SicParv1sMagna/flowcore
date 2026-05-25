@@ -1,6 +1,6 @@
 # History
 
-Flowlet keeps a history of visited nodes.
+Graphlet keeps a history of visited nodes.
 
 History is useful for wizard-like flows, screen graphs and back navigation.
 

@@ -1,6 +1,6 @@
 # Getting Started
 
-Flowlet is a small headless graph runtime.
+graphlet is a small headless graph runtime.
 
 It does not render UI and does not depend on any framework. You defined graph, create a runtime instance and move through
 nodes.
@@ -8,13 +8,13 @@ nodes.
 ## Install
 
 ```bash
-npm install @flowlet/core
+npm install @graphlet/core
 ```
 
 ## Define a graph
 
 ```typescript
-import { defineGraph, makeGraph } from "@flowlet/core";
+import { defineGraph, makeGraph } from "@graphlet/core";
 
 const schema = defineGraph({
     step1: ["step2", "step3"],
@@ -53,7 +53,7 @@ flow.current();
 
 ## Invalid transitions
 
-Flowlet only allows transitions that exist in your graph.
+graphlet only allows transitions that exist in your graph.
 
 ```typescript
 graph.goTo("step2");

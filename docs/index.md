@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: Flowlet
+  name: Graphlet
   text: Typed headless graph runtime
   tagline: Build graph-based flows without UI lock-in.
   actions:
@@ -15,7 +15,7 @@ hero:
 
 features:
   - title: Headless
-    details: No React, no Vue, no Svelte, no DOM. Flowlet only manages graph state.
+    details: No React, no Vue, no Svelte, no DOM. Graphlet only manages graph state.
   - title: Typed by design
     details: Nodes are inferred from your graph schema and reused across the runtime API.
   - title: Runtime ready

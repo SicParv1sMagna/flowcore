@@ -2,12 +2,12 @@
 
 Context is user-defined data stored inside the graph runtime.
 
-Flowlet does not interpret context. It only stores it, returns it in snapshots and notifies listeners when it changes.
+graphlet does not interpret context. It only stores it, returns it in snapshots and notifies listeners when it changes.
 
 ## Create graph with context
 
 ```typescript
-import { defineGraph, makeGraph } from "@flowlet/core";
+import { defineGraph, makeGraph } from "@graphlet/core";
 
 const schema = defineGraph({
     step1: ["step2"],

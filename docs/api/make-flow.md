@@ -9,7 +9,7 @@ const graph = makeGraph(schema, options);
 ## Basic usage
 
 ```ts
-import { defineGraph, makeGraph } from "@flowlet/core";
+import { defineGraph, makeGraph } from "@graphlet/core";
 
 const schema = defineGraph({
   step1: ["step2", "step3"],
