@@ -1,6 +1,6 @@
 {
   "name": "@graphlet/core",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Tiny headless graph runtime",
   "type": "module",
   "main": "./dist/index.js",
