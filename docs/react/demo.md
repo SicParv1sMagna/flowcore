@@ -2,7 +2,7 @@
 
 Graphlet React demo is deployed as a standalone application.
 
-[Open React Demo](https://sicparv1smagna.github.io/graphlet/demo/)
+[Open React Demo](https://sicparv1smagna.github.io/graphlet/demo/react)
 
 The demo shows:
 

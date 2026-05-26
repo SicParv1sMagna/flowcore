@@ -51,8 +51,13 @@ jobs:
 
       - name: Copy React demo into Pages artifact
         run: |
-          mkdir -p docs/.vitepress/dist/demo
-          cp -R examples/react-basic/dist/* docs/.vitepress/dist/demo/
+          mkdir -p docs/.vitepress/dist/demo/react
+          cp -R examples/react-basic/dist/* docs/.vitepress/dist/demo/react/
+
+      - name: Debug Pages artifact
+        run: |
+          echo "Demo files:"
+          find docs/.vitepress/dist/demo/react -maxdepth 2 -type f | sort
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
