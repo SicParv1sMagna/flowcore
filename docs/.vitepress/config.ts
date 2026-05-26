@@ -2,6 +2,7 @@ import { defineConfig } from "vitepress";
 
 export default defineConfig({
   base: "/graphlet/",
+
   title: "Graphlet",
   description: "Typed headless graph runtime",
 
@@ -9,14 +10,15 @@ export default defineConfig({
     nav: [
       { text: "Guide", link: "/guide/getting-started" },
       { text: "React", link: "/react/getting-started" },
-      { text: "API", link: "/api/graph" }
+      { text: "API", link: "/api/graph" },
+      { text: "Demo", link: "/react/demo" }
     ],
 
     sidebar: [
       {
         text: "Guide",
         items: [
-          { text: "Getting started", link: "/guide/getting-started" },
+          { text: "Getting Started", link: "/guide/getting-started" },
           { text: "Core Concepts", link: "/guide/core-concepts" },
           { text: "Context", link: "/guide/context" },
           { text: "History", link: "/guide/history" },
@@ -27,7 +29,7 @@ export default defineConfig({
         text: "React",
         items: [
           { text: "Getting Started", link: "/react/getting-started" },
-          { text: "Component Graphs", link: "/react/component-graphs" },
+          { text: "React Graphs", link: "/react/react-graphs" },
           { text: "GraphOutlet", link: "/react/graph-outlet" },
           { text: "Demo", link: "/react/demo" }
         ]
@@ -48,7 +50,7 @@ export default defineConfig({
     socialLinks: [
       {
         icon: "github",
-        link: "https://github.com/SicParv1sMagna/graphlet"
+        link: "https://github.com/sicparv1smagna/graphlet"
       }
     ]
   }

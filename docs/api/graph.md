@@ -25,7 +25,9 @@ new Graph(entries, options);
 ## Entries
 
 ```ts
-[[node, nextNodes]];
+[
+  [node, nextNodes]
+]
 ```
 
 Example:
@@ -35,7 +37,7 @@ Example:
   ["step1", ["step2", "step3"]],
   ["step2", []],
   ["step3", []]
-];
+]
 ```
 
 ## Options
@@ -105,7 +107,7 @@ Example:
 [
   ["step1", "step2"],
   ["step1", "step3"]
-];
+]
 ```
 
 ## hasNode
@@ -179,6 +181,13 @@ Failure result:
   from: "step1",
   to: "step5"
 }
+```
+
+Failure reasons:
+
+```ts
+"UNKNOWN_NODE"
+"TRANSITION_NOT_ALLOWED"
 ```
 
 ## getContext

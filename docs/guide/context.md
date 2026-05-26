@@ -9,27 +9,31 @@ Graphlet does not interpret context. It only stores it, returns it in snapshots 
 ```ts
 import { Graph } from "@graphlet/core";
 
-type Node = "step1" | "step2";
+type Node = "profile" | "review";
 
 type Payload = {
-  source: "button" | "keyboard";
+  source: "button" | "form";
 };
 
 type Context = {
-  values: Record<string, unknown>;
-  completed: Node[];
+  profile: {
+    name: string;
+    email: string;
+  };
 };
 
 const graph = new Graph<Node, Payload, Context>(
   [
-    ["step1", ["step2"]],
-    ["step2", []]
+    ["profile", ["review"]],
+    ["review", ["profile"]]
   ],
   {
-    initial: "step1",
+    initial: "profile",
     context: {
-      values: {},
-      completed: []
+      profile: {
+        name: "",
+        email: ""
+      }
     }
   }
 );
@@ -45,10 +49,10 @@ graph.getContext();
 
 ```ts
 graph.setContext({
-  values: {
-    answer: 42
-  },
-  completed: ["step1"]
+  profile: {
+    name: "Ada Lovelace",
+    email: "ada@example.com"
+  }
 });
 ```
 
@@ -57,7 +61,10 @@ graph.setContext({
 ```ts
 graph.setContext((ctx) => ({
   ...ctx,
-  completed: [...ctx.completed, graph.current()]
+  profile: {
+    ...ctx.profile,
+    name: "Ada Lovelace"
+  }
 }));
 ```
 
@@ -69,13 +76,15 @@ graph.getSnapshot();
 
 ```ts
 {
-  current: "step1",
-  next: ["step2"],
+  current: "profile",
+  next: ["review"],
   context: {
-    values: {},
-    completed: []
+    profile: {
+      name: "Ada Lovelace",
+      email: "ada@example.com"
+    }
   },
-  history: ["step1"]
+  history: ["profile"]
 }
 ```
 

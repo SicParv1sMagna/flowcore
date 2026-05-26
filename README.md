@@ -1,20 +1,79 @@
-# graphlet
+# Graphlet
 
-Typed headless graph runtime for building graph-based flows.
+Typed headless graph runtime for TypeScript and React flows.
+
+## Core
+
+```bash
+npm install @graphlet/core
+```
 
 ```ts
-import { defineGraph, makeGraph } from "@graphlet/core";
+import { Graph } from "@graphlet/core";
 
-const schema = defineGraph({
-  step1: ["step2", "step3"],
-  step2: [],
-  step3: []
-});
+const graph = new Graph(
+  [
+    ["welcome", ["profile"]],
+    ["profile", ["done"]],
+    ["done", ["welcome"]]
+  ] as const,
+  {
+    initial: "welcome"
+  }
+);
 
-const flow = makeGraph(schema, {
-  initial: "step1"
-});
+graph.goTo("profile");
 
-flow.goTo("step3");
-flow.current();
+graph.getSnapshot();
+// {
+//   current: "profile",
+//   next: ["done"],
+//   context: undefined,
+//   history: ["welcome", "profile"]
+// }
 ```
+
+## React
+
+```bash
+npm install @graphlet/core @graphlet/react
+```
+
+```tsx
+import {
+  createReactGraph,
+  GraphOutlet
+} from "@graphlet/react";
+
+enum FlowNode {
+  Welcome = "welcome",
+  Profile = "profile",
+  Done = "done"
+}
+
+const graph = createReactGraph()(
+  [
+    [FlowNode.Welcome, [FlowNode.Profile]],
+    [FlowNode.Profile, [FlowNode.Done]],
+    [FlowNode.Done, [FlowNode.Welcome]]
+  ] as const,
+  {
+    initial: FlowNode.Welcome,
+    components: {
+      [FlowNode.Welcome]: WelcomeScreen,
+      [FlowNode.Profile]: ProfileScreen,
+      [FlowNode.Done]: DoneScreen
+    }
+  }
+);
+
+export function App() {
+  return <GraphOutlet graph={graph} />;
+}
+```
+
+## Links
+
+- Documentation: https://sicparv1smagna.github.io/graphlet/
+- React demo: https://sicparv1smagna.github.io/graphlet/demo/react/
+- GitHub: https://github.com/sicparv1smagna/graphlet

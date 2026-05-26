@@ -1,6 +1,6 @@
-# Graphlet
+# @graphlet/core
 
-Typed headless graph runtime for building graph-based flows.
+Typed headless graph runtime.
 
 ## Documentation
 
@@ -19,26 +19,23 @@ import { Graph } from "@graphlet/core";
 
 const graph = new Graph(
   [
-    ["step1", ["step2", "step3"]],
-    ["step2", []],
-    ["step3", ["step1"]]
+    ["welcome", ["profile"]],
+    ["profile", ["done"]],
+    ["done", ["welcome"]]
   ] as const,
   {
-    initial: "step1"
+    initial: "welcome"
   }
 );
 
-graph.current();
-// "step1"
-
-graph.goTo("step3");
+graph.goTo("profile");
 
 graph.getSnapshot();
 // {
-//   current: "step3",
-//   next: ["step1"],
+//   current: "profile",
+//   next: ["done"],
 //   context: undefined,
-//   history: ["step1", "step3"]
+//   history: ["welcome", "profile"]
 // }
 ```
 
@@ -54,4 +51,5 @@ graph.getSnapshot();
 
 - Documentation: https://sicparv1smagna.github.io/graphlet/
 - React adapter: https://sicparv1smagna.github.io/graphlet/react/getting-started.html
+- Demo: https://sicparv1smagna.github.io/graphlet/demo/react/
 - GitHub: https://github.com/sicparv1smagna/graphlet

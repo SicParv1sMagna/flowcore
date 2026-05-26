@@ -1,6 +1,6 @@
 # Getting Started
 
-Graphlet is a small headless graph runtime.
+Graphlet is a typed headless graph runtime.
 
 It does not render UI and does not depend on any framework. You create a graph from tuple entries and move through nodes.
 
@@ -15,61 +15,61 @@ npm install @graphlet/core
 ```ts
 import { Graph } from "@graphlet/core";
 
-const graph = new Graph(
+type Node = "welcome" | "profile" | "done";
+
+const graph = new Graph<Node>(
   [
-    ["step1", ["step2", "step3"]],
-    ["step2", []],
-    ["step3", ["step4"]],
-    ["step4", ["step1"]]
-  ] as const,
+    ["welcome", ["profile"]],
+    ["profile", ["done"]],
+    ["done", ["welcome"]]
+  ],
   {
-    initial: "step1"
+    initial: "welcome"
   }
 );
 ```
 
-Each tuple has this shape:
+Each entry has this shape:
 
 ```ts
-[node, nextNodes];
+[node, nextNodes]
 ```
 
 So this entry:
 
 ```ts
-["step1", ["step2", "step3"]];
+["welcome", ["profile"]]
 ```
 
 means:
 
 ```txt
-step1 -> step2
-step1 -> step3
+welcome -> profile
 ```
 
 ## Read current node
 
 ```ts
 graph.current();
-// "step1"
+// "welcome"
 ```
 
 ## Read next nodes
 
 ```ts
 graph.getNext();
-// ["step2", "step3"]
+// ["profile"]
 ```
 
 ## Move to another node
 
 ```ts
-graph.goTo("step3");
+graph.goTo("profile");
 // {
 //   ok: true,
-//   from: "step1",
-//   to: "step3",
-//   current: "step3"
+//   from: "welcome",
+//   to: "profile",
+//   current: "profile"
 // }
 ```
 
@@ -78,12 +78,12 @@ graph.goTo("step3");
 Graphlet only allows transitions that exist in the graph.
 
 ```ts
-graph.goTo("step2");
+graph.goTo("welcome");
 // {
 //   ok: false,
 //   reason: "TRANSITION_NOT_ALLOWED",
-//   from: "step3",
-//   to: "step2"
+//   from: "profile",
+//   to: "welcome"
 // }
 ```
 
@@ -95,9 +95,43 @@ graph.getSnapshot();
 
 ```ts
 {
-  current: "step3",
-  next: ["step4"],
+  current: "profile",
+  next: ["done"],
   context: undefined,
-  history: ["step1", "step3"]
+  history: ["welcome", "profile"]
 }
+```
+
+## With payload and context
+
+```ts
+type Payload = {
+  source: "button" | "keyboard";
+};
+
+type Context = {
+  name: string;
+};
+
+const graph = new Graph<Node, Payload, Context>(
+  [
+    ["welcome", ["profile"]],
+    ["profile", ["done"]],
+    ["done", ["welcome"]]
+  ],
+  {
+    initial: "welcome",
+    context: {
+      name: ""
+    }
+  }
+);
+
+graph.goTo("profile", {
+  source: "button"
+});
+
+graph.setContext({
+  name: "Ada"
+});
 ```

@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Graphlet
   text: Typed headless graph runtime
-  tagline: Build graph-based flows with plain TypeScript or React Components.
+  tagline: Build graph-based flows with TypeScript and render them in React.
   actions:
     - theme: brand
       text: Get Started
@@ -12,12 +12,15 @@ hero:
     - theme: alt
       text: React Adapter
       link: /react/getting-started
+    - theme: alt
+      text: Open Demo
+      link: /react/demo
 
 features:
-  - title: Headless
-    details: Graphlet manages graph state, transitions, context and history without knowing anything about UI
-  - title: Tuple-based graphs
-    details: Define graphs as tuples like `[node, nextNodes]`, where nodes can be strings, objects or components.
-  - title: React component graphs
-    details: In React, components can become graph nodes. Your components decide when and where to navigate.
+  - title: Headless core
+    details: Graphlet manages graph state, transitions, context, history and subscriptions without depending on UI frameworks.
+  - title: Tuple-based graph API
+    details: Define graph transitions as [node, nextNodes] entries. Nodes can be strings, enums or other stable values.
+  - title: React adapter
+    details: Map graph nodes to React components and render the current node with GraphOutlet.
 ---

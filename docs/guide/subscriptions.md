@@ -64,23 +64,17 @@ The event describes why the subscription was triggered.
 Graphlet currently emits these event types:
 
 ```ts
-"init";
-"transition";
-"context";
-"back";
-"history.clear";
-"reset";
+"init"
+"transition"
+"context"
+"back"
+"history.clear"
+"reset"
 ```
 
 ## Init event
 
 `subscribe()` calls the listener immediately with an `init` event.
-
-```ts
-const unsubscribe = graph.subscribe((snapshot, event) => {
-  console.log(event);
-});
-```
 
 ```ts
 {
@@ -127,11 +121,6 @@ The snapshot already contains the new current node.
 
 Failed transitions do not notify subscribers.
 
-```ts
-graph.goTo("unknown" as never);
-// no subscription event
-```
-
 ## Context event
 
 `setContext()` emits a `context` event.
@@ -158,19 +147,6 @@ Subscriber receives:
 }
 ```
 
-The snapshot also contains the updated context.
-
-```ts
-{
-  current: "step1",
-  next: ["step2"],
-  context: {
-    completed: ["step1"]
-  },
-  history: ["step1"]
-}
-```
-
 ## Back event
 
 `back()` emits a `back` event when it succeeds.
@@ -190,11 +166,6 @@ Subscriber receives:
 ```
 
 If history is empty, `back()` returns a failure result and does not notify subscribers.
-
-```ts
-graph.back();
-// { ok: false, reason: "EMPTY_HISTORY", current: "step1" }
-```
 
 ## History clear event
 
@@ -256,82 +227,22 @@ unsubscribe();
 
 After calling `unsubscribe`, the listener will no longer be called.
 
-```ts
-unsubscribe();
-
-graph.goTo("step2");
-// listener is not called
-```
-
-## Example: logging graph changes
-
-```ts
-const unsubscribe = graph.subscribe((snapshot, event) => {
-  console.log(`[${event.type}]`, {
-    current: snapshot.current,
-    next: snapshot.next,
-    history: snapshot.history
-  });
-});
-
-graph.goTo("step2");
-graph.reset();
-
-unsubscribe();
-```
-
-## Example: custom UI adapter
-
-Subscriptions can be used to build adapters for any UI framework.
-
-```ts
-function createSimpleAdapter(graph, render) {
-  const unsubscribe = graph.subscribe((snapshot) => {
-    render(snapshot.current);
-  });
-
-  return unsubscribe;
-}
-```
-
-React adapter uses the same idea internally through `useGraph(graph)`.
-
 ## React usage
 
 In React, prefer `useGraph(graph)`.
 
 ```tsx
-import { useGraph } from "@graphlet/core-react";
+import { useGraph } from "@graphlet/react";
 
 function DebugPanel({ graph }) {
   const { snapshot, event } = useGraph(graph);
 
-  return <pre>{JSON.stringify({ snapshot, event }, null, 2)}</pre>;
+  return (
+    <pre>
+      {JSON.stringify({ snapshot, event }, null, 2)}
+    </pre>
+  );
 }
 ```
 
 Use low-level `subscribe()` directly only when you need custom integrations.
-
-## Event narrowing
-
-Events are discriminated by `event.type`.
-
-```ts
-graph.subscribe((snapshot, event) => {
-  if (event.type === "transition") {
-    console.log(event.from);
-    console.log(event.to);
-    console.log(event.payload);
-  }
-
-  if (event.type === "context") {
-    console.log(event.previousContext);
-    console.log(event.context);
-  }
-
-  if (event.type === "reset") {
-    console.log(event.from);
-    console.log(event.to);
-  }
-});
-```

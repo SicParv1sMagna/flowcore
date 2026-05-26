@@ -1,8 +1,8 @@
 # React Getting Started
 
-The React adapter lets you use React components as graph nodes.
+The React adapter maps graph nodes to React components.
 
-This means you do not need string IDs or a separate component map.
+Unlike component-as-node approaches, Graphlet uses stable node IDs such as strings or enums. This makes snapshots, history and debug output readable in development and production.
 
 ## Install
 
@@ -10,40 +10,53 @@ This means you do not need string IDs or a separate component map.
 npm install @graphlet/core @graphlet/react
 ```
 
-## Create component graph
+## Define nodes
 
-```typescript
-import { createComponentGraph, GraphOutlet } from "@graphlet/react";
+You can use strings directly, but enums are convenient for larger flows.
 
-type Payload = {
-  source: "button" | "keyboard";
-};
+```ts
+export enum FlowNode {
+  Welcome = "welcome",
+  Profile = "profile",
+  Plan = "plan",
+  Review = "review",
+  Success = "success"
+}
+```
 
-type Context = {
-  values: {
-    name?: string;
-  };
-};
+## Create React graph
 
-const graph = createComponentGraph<Payload, Context>()(
+```tsx
+import { createReactGraph } from "@graphlet/react";
+
+import { FlowNode } from "./nodes";
+
+const graph = createReactGraph()(
   [
-    [IntroScreen, [FormScreen]],
-    [FormScreen, [PreviewScreen]],
-    [PreviewScreen, [FormScreen, DoneScreen]],
-    [DoneScreen, []]
+    [FlowNode.Welcome, [FlowNode.Profile]],
+    [FlowNode.Profile, [FlowNode.Plan]],
+    [FlowNode.Plan, [FlowNode.Review]],
+    [FlowNode.Review, [FlowNode.Plan, FlowNode.Success]],
+    [FlowNode.Success, [FlowNode.Welcome]]
   ] as const,
   {
-    initial: IntroScreen,
-    context: {
-      values: {}
+    initial: FlowNode.Welcome,
+    components: {
+      [FlowNode.Welcome]: WelcomeScreen,
+      [FlowNode.Profile]: ProfileScreen,
+      [FlowNode.Plan]: PlanScreen,
+      [FlowNode.Review]: ReviewScreen,
+      [FlowNode.Success]: SuccessScreen
     }
   }
 );
 ```
 
-## Render current component
+## Render current node
 
 ```tsx
+import { GraphOutlet } from "@graphlet/react";
+
 export function App() {
   return <GraphOutlet graph={graph} />;
 }
@@ -51,16 +64,36 @@ export function App() {
 
 ## Navigate inside components
 
+`GraphOutlet` passes `graph` and `snapshot` to the current component.
+
 ```tsx
-function IntroScreen({ graph }: ScreenProps) {
+function WelcomeScreen({ graph }) {
   return (
-    <button onClick={() => graph.goTo(FormScreen, { source: "button" })}>
+    <button onClick={() => graph.goTo(FlowNode.Profile)}>
       Start
     </button>
   );
 }
 ```
 
-The component decides when to move to another component.
+The component decides when to move to another node.
 
-Graphlet only checks if the target component is allowed by the graph.
+Graphlet only checks if the target node is allowed by the graph.
+
+## Subscribe inside components
+
+Use `useGraph(graph)` when the component needs reactive access to context, history or events.
+
+```tsx
+import { useGraph } from "@graphlet/react";
+
+function DebugPanel({ graph }) {
+  const { snapshot, event } = useGraph(graph);
+
+  return (
+    <pre>
+      {JSON.stringify({ snapshot, event }, null, 2)}
+    </pre>
+  );
+}
+```

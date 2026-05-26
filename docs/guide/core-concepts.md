@@ -17,23 +17,27 @@ const entries = [
 Every entry has this shape:
 
 ```ts
-[node, nextNodes];
+[node, nextNodes]
 ```
 
 ## Node
 
-A node is any value in your graph.
+A node is a value in your graph.
 
-In simple TypeScript flows, nodes are often strings:
+Most applications use strings or enums:
 
 ```ts
-["idle", ["active"]];
+type Node = "idle" | "active" | "done";
 ```
 
-In React flows, nodes can be components:
+or:
 
-```tsx
-[IntroScreen, [FormScreen]];
+```ts
+enum FlowNode {
+  Idle = "idle",
+  Active = "active",
+  Done = "done"
+}
 ```
 
 ## Edge
@@ -41,7 +45,7 @@ In React flows, nodes can be components:
 An edge is a connection from one node to another.
 
 ```ts
-["idle", ["active", "cancelled"]];
+["idle", ["active", "cancelled"]]
 ```
 
 This means:
@@ -69,6 +73,18 @@ graph.goTo("active");
 
 The transition succeeds only if there is an edge from the current node to the target node.
 
+## Payload
+
+Payload is optional data passed with a transition.
+
+```ts
+graph.goTo("active", {
+  source: "button"
+});
+```
+
+Graphlet does not interpret payload. It only passes it to transition events and result objects.
+
 ## Context
 
 Context is user-defined data stored in the graph runtime.
@@ -90,3 +106,13 @@ graph.back();
 ```
 
 This is useful for screen flows, wizards and multi-step interfaces.
+
+## Subscriptions
+
+Graphlet can notify listeners when runtime state changes.
+
+```ts
+const unsubscribe = graph.subscribe((snapshot, event) => {
+  console.log(snapshot, event);
+});
+```

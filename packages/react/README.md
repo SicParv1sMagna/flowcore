@@ -2,8 +2,6 @@
 
 React adapter for Graphlet.
 
-Graphlet React lets you use React components as graph nodes.
-
 ## Documentation
 
 Full documentation: https://sicparv1smagna.github.io/graphlet/react/getting-started.html
@@ -14,32 +12,32 @@ Full documentation: https://sicparv1smagna.github.io/graphlet/react/getting-star
 npm install @graphlet/core @graphlet/react
 ```
 
-## Component graph example
+## Basic usage
 
 ```tsx
-import { createComponentGraph, GraphOutlet } from "@graphlet/react";
+import {
+  createReactGraph,
+  GraphOutlet
+} from "@graphlet/react";
 
-type Payload = {
-  source: "button" | "keyboard";
-};
+enum FlowNode {
+  Welcome = "welcome",
+  Profile = "profile",
+  Done = "done"
+}
 
-type Context = {
-  values: {
-    name?: string;
-  };
-};
-
-const graph = createComponentGraph<Payload, Context>()(
+const graph = createReactGraph()(
   [
-    [IntroScreen, [FormScreen]],
-    [FormScreen, [PreviewScreen]],
-    [PreviewScreen, [FormScreen, DoneScreen]],
-    [DoneScreen, []]
+    [FlowNode.Welcome, [FlowNode.Profile]],
+    [FlowNode.Profile, [FlowNode.Done]],
+    [FlowNode.Done, [FlowNode.Welcome]]
   ] as const,
   {
-    initial: IntroScreen,
-    context: {
-      values: {}
+    initial: FlowNode.Welcome,
+    components: {
+      [FlowNode.Welcome]: WelcomeScreen,
+      [FlowNode.Profile]: ProfileScreen,
+      [FlowNode.Done]: DoneScreen
     }
   }
 );
@@ -51,26 +49,24 @@ export function App() {
 
 ## API
 
-### createComponentGraph
+### createReactGraph
 
-Creates a component graph where React components are graph nodes.
+Creates a graph with React component mapping.
 
 ```tsx
-const graph = createComponentGraph<Payload, Context>()(
-  [
-    [IntroScreen, [FormScreen]],
-    [FormScreen, []]
-  ] as const,
+const graph = createReactGraph<Payload, Context>()(
+  entries,
   {
-    initial: IntroScreen,
-    context: {}
+    initial,
+    context,
+    components
   }
 );
 ```
 
 ### GraphOutlet
 
-Renders the current component node.
+Renders the component mapped to the current node.
 
 ```tsx
 <GraphOutlet graph={graph} />
@@ -87,5 +83,5 @@ const { snapshot, event } = useGraph(graph);
 ## Links
 
 - Documentation: https://sicparv1smagna.github.io/graphlet/react/getting-started.html
-- Demo: https://sicparv1smagna.github.io/graphlet/react/demo.html
+- Demo: https://sicparv1smagna.github.io/graphlet/demo/react/
 - GitHub: https://github.com/sicparv1smagna/graphlet
