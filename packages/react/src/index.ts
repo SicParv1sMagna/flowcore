@@ -3,12 +3,13 @@ export { GraphOutlet } from "./GraphOutlet.js";
 export { useGraph } from "./useGraph.js";
 
 export type {
-  AnyGraph,
-  ComponentGraphOptions,
-  ComponentNode,
+  AnyReactGraph,
   GraphOutletProps,
   InferGraphContext,
   InferGraphNode,
   InferGraphPayload,
+  ReactGraphEntries,
+  ReactGraphNode,
+  ReactGraphOptions,
   UseGraphResult
 } from "./types.js";

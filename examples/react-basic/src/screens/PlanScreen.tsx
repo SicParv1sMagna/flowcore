@@ -2,9 +2,8 @@ import { useGraph } from "@graphlet/react";
 
 import type { Plan, ScreenComponent } from "../types";
 
-import { CompanyDetailsScreen } from "./CompanyDetailsScreen";
-import { PersonalDetailsScreen } from "./PersonalDetailsScreen";
 import { Screen } from "../components/Screen";
+import { FlowNode } from "../nodes";
 
 export const PlanScreen: ScreenComponent = ({ graph }) => {
   const { snapshot } = useGraph(graph);
@@ -46,7 +45,7 @@ export const PlanScreen: ScreenComponent = ({ graph }) => {
         <button
           disabled={selectedPlan !== "personal"}
           onClick={() =>
-            graph.goTo(PersonalDetailsScreen, {
+            graph.goTo(FlowNode.PersonalDetails, {
               source: "button"
             })
           }
@@ -57,7 +56,7 @@ export const PlanScreen: ScreenComponent = ({ graph }) => {
         <button
           disabled={selectedPlan !== "business"}
           onClick={() =>
-            graph.goTo(CompanyDetailsScreen, {
+            graph.goTo(FlowNode.CompanyDetails, {
               source: "button"
             })
           }

@@ -17,17 +17,22 @@ export function DebugPanel({ graph }: { graph: GraphInstance }) {
           <h2>Debug panel</h2>
         </div>
 
-        <button onClick={() => graph.clearHistory()}>Clear history</button>
+        <button
+          className="secondaryButton"
+          onClick={() => graph.clearHistory()}
+        >
+          Clear history
+        </button>
       </div>
 
       <DebugSection title="Snapshot">
         <pre>
           {JSON.stringify(
             {
-              current: snapshot.current.name,
-              next: snapshot.next.map((node) => node.name),
+              current: snapshot.current,
+              next: snapshot.next,
               context: snapshot.context,
-              history: snapshot.history.map((node) => node.name)
+              history: snapshot.history
             },
             null,
             2
@@ -36,71 +41,16 @@ export function DebugPanel({ graph }: { graph: GraphInstance }) {
       </DebugSection>
 
       <DebugSection title="Last event">
-        <pre>{JSON.stringify(formatEvent(event), null, 2)}</pre>
+        <pre>{JSON.stringify(event, null, 2)}</pre>
       </DebugSection>
 
       <DebugSection title="Available from current node">
         <div className="nodeList">
           {snapshot.next.map((node) => (
-            <span key={node.name}>{node.name}</span>
+            <span key={node}>{node}</span>
           ))}
         </div>
       </DebugSection>
     </aside>
   );
-}
-
-function formatEvent(
-  event: ReturnType<typeof useGraph<GraphInstance>>["event"]
-) {
-  if (!event) {
-    return null;
-  }
-
-  if (event.type === "transition") {
-    return {
-      ...event,
-      from: event.from.name,
-      to: event.to.name
-    };
-  }
-
-  if (event.type === "reset") {
-    return {
-      ...event,
-      from: event.from.name,
-      to: event.to.name
-    };
-  }
-
-  if (event.type === "back") {
-    return {
-      ...event,
-      from: event.from.name,
-      to: event.to.name
-    };
-  }
-
-  if (event.type === "history.clear") {
-    return {
-      ...event,
-      current: event.current.name
-    };
-  }
-
-  if (event.type === "init") {
-    return {
-      ...event,
-      current: event.current.name
-    };
-  }
-
-  if (event.type === "context") {
-    return {
-      ...event,
-      current: event.current.name
-    };
-  }
-
-  return event;
 }

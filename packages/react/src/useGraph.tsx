@@ -1,16 +1,15 @@
 import { useMemo, useSyncExternalStore } from "react";
 
-import type { GraphEvent, GraphSnapshot } from "@graphlet/core";
+import type { Graph, GraphEvent, GraphSnapshot } from "@graphlet/core";
 
 import type {
-  AnyGraph,
   InferGraphContext,
   InferGraphNode,
   InferGraphPayload,
   UseGraphResult
 } from "./types.js";
 
-type StoreSnapshot<TGraph extends AnyGraph> = {
+type StoreSnapshot<TGraph extends Graph<any, any, any>> = {
   snapshot: GraphSnapshot<InferGraphNode<TGraph>, InferGraphContext<TGraph>>;
   event: GraphEvent<
     InferGraphNode<TGraph>,
@@ -19,7 +18,9 @@ type StoreSnapshot<TGraph extends AnyGraph> = {
   > | null;
 };
 
-function createReactGraphStore<TGraph extends AnyGraph>(graph: TGraph) {
+function createReactGraphStore<TGraph extends Graph<any, any, any>>(
+  graph: TGraph
+) {
   let current: StoreSnapshot<TGraph> = {
     snapshot: graph.getSnapshot() as StoreSnapshot<TGraph>["snapshot"],
     event: null
@@ -43,7 +44,7 @@ function createReactGraphStore<TGraph extends AnyGraph>(graph: TGraph) {
   };
 }
 
-export function useGraph<TGraph extends AnyGraph>(
+export function useGraph<TGraph extends Graph<any, any, any>>(
   graph: TGraph
 ): UseGraphResult<TGraph> {
   const store = useMemo(() => createReactGraphStore(graph), [graph]);

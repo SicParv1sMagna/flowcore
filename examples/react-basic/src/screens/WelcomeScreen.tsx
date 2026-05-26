@@ -1,14 +1,14 @@
 import type { ScreenComponent } from "../types";
 
-import { ProfileScreen } from "./ProfileScreen";
 import { Screen } from "../components/Screen";
+import { FlowNode } from "../nodes";
 
 export const WelcomeScreen: ScreenComponent = ({ graph, snapshot }) => {
   return (
     <Screen title="Welcome" eyebrow="Start">
       <p className="muted">
-        This demo uses React components as graph nodes. The current node is{" "}
-        <code>{snapshot.current.name}</code>.
+        This demo uses string/enum nodes and maps each node to a React
+        component. The current node is <code>{snapshot.current}</code>.
       </p>
 
       <div className="card">
@@ -19,7 +19,13 @@ export const WelcomeScreen: ScreenComponent = ({ graph, snapshot }) => {
       </div>
 
       <div className="actions">
-        <button onClick={() => graph.goTo(ProfileScreen, { source: "button" })}>
+        <button
+          onClick={() =>
+            graph.goTo(FlowNode.Profile, {
+              source: "button"
+            })
+          }
+        >
           Start onboarding
         </button>
       </div>

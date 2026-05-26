@@ -1,10 +1,15 @@
 import type { Graph, GraphEvent, GraphSnapshot } from "@graphlet/core";
-
 import type { ComponentType } from "react";
 
-export type ComponentNode = ComponentType<any>;
+export type ReactGraphNode = string | number | symbol;
 
-export type AnyGraph = Graph<any, any, any>;
+export type ReactGraphEntries<Node extends ReactGraphNode> = ReadonlyArray<
+  readonly [Node, readonly Node[]]
+>;
+
+export type AnyReactGraph = Graph<any, any, any> & {
+  components: Record<PropertyKey, ComponentType<any>>;
+};
 
 export type InferGraphNode<TGraph> =
   TGraph extends Graph<infer Node, any, any> ? Node : never;
@@ -15,7 +20,17 @@ export type InferGraphPayload<TGraph> =
 export type InferGraphContext<TGraph> =
   TGraph extends Graph<any, any, infer Context> ? Context : never;
 
-export type UseGraphResult<TGraph extends AnyGraph> = {
+export type ReactGraphOptions<
+  Node extends ReactGraphNode,
+  Context,
+  Components extends Record<Node, ComponentType<any>>
+> = {
+  initial: Node;
+  context?: Context;
+  components: Components;
+};
+
+export type UseGraphResult<TGraph extends Graph<any, any, any>> = {
   snapshot: GraphSnapshot<InferGraphNode<TGraph>, InferGraphContext<TGraph>>;
   event: GraphEvent<
     InferGraphNode<TGraph>,
@@ -24,12 +39,7 @@ export type UseGraphResult<TGraph extends AnyGraph> = {
   > | null;
 };
 
-export type GraphOutletProps<TGraph extends AnyGraph> = {
+export type GraphOutletProps<TGraph extends AnyReactGraph> = {
   graph: TGraph;
   props?: Record<string, unknown>;
-};
-
-export type ComponentGraphOptions<Node, Context> = {
-  initial: Node;
-  context?: Context;
 };

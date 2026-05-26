@@ -2,9 +2,8 @@ import { useGraph } from "@graphlet/react";
 
 import type { ScreenComponent } from "../types";
 
-import { SummaryRow, Screen } from "../components/Screen";
-import { PlanScreen } from "./PlanScreen";
-import { SuccessScreen } from "./SuccessScreen";
+import { Screen, SummaryRow } from "../components/Screen";
+import { FlowNode } from "../nodes";
 
 export const ReviewScreen: ScreenComponent = ({ graph }) => {
   const { snapshot } = useGraph(graph);
@@ -38,7 +37,13 @@ export const ReviewScreen: ScreenComponent = ({ graph }) => {
           Back
         </button>
 
-        <button onClick={() => graph.goTo(PlanScreen, { source: "button" })}>
+        <button
+          onClick={() =>
+            graph.goTo(FlowNode.Plan, {
+              source: "button"
+            })
+          }
+        >
           Change plan
         </button>
 
@@ -49,7 +54,7 @@ export const ReviewScreen: ScreenComponent = ({ graph }) => {
               completedAt: new Date().toISOString()
             }));
 
-            graph.goTo(SuccessScreen, {
+            graph.goTo(FlowNode.Success, {
               source: "system"
             });
           }}

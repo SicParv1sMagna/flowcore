@@ -2,7 +2,7 @@ import { useGraph } from "@graphlet/react";
 
 import type { ScreenComponent } from "../types";
 
-import { initialContext } from "../graph";
+import { initialContext } from "../context";
 import { Screen } from "../components/Screen";
 
 export const SuccessScreen: ScreenComponent = ({ graph }) => {

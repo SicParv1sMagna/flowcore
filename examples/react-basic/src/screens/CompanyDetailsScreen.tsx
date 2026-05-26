@@ -3,7 +3,7 @@ import { useGraph } from "@graphlet/react";
 import type { ScreenComponent } from "../types";
 
 import { Field, Screen } from "../components/Screen";
-import { ReviewScreen } from "./ReviewScreen";
+import { FlowNode } from "../nodes";
 
 export const CompanyDetailsScreen: ScreenComponent = ({ graph }) => {
   const { snapshot } = useGraph(graph);
@@ -54,7 +54,7 @@ export const CompanyDetailsScreen: ScreenComponent = ({ graph }) => {
         <button
           disabled={!canContinue}
           onClick={() =>
-            graph.goTo(ReviewScreen, {
+            graph.goTo(FlowNode.Review, {
               source: "form",
               field: "company"
             })

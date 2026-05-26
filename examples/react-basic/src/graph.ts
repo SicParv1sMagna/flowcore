@@ -1,5 +1,8 @@
 import { createComponentGraph } from "@graphlet/react";
 
+import { initialContext } from "./context";
+import { FlowNode } from "./nodes";
+
 import type { Context, Payload } from "./types";
 
 import { CompanyDetailsScreen } from "./screens/CompanyDetailsScreen";
@@ -10,38 +13,27 @@ import { ReviewScreen } from "./screens/ReviewScreen";
 import { SuccessScreen } from "./screens/SuccessScreen";
 import { WelcomeScreen } from "./screens/WelcomeScreen";
 
-export const initialContext: Context = {
-  profile: {
-    name: "",
-    email: ""
-  },
-
-  selectedPlan: null,
-
-  personal: {
-    interests: []
-  },
-
-  company: {
-    companyName: "",
-    teamSize: 1
-  },
-
-  completedAt: null
-};
-
 export const graph = createComponentGraph<Payload, Context>()(
   [
-    [WelcomeScreen, [ProfileScreen]],
-    [ProfileScreen, [PlanScreen]],
-    [PlanScreen, [PersonalDetailsScreen, CompanyDetailsScreen]],
-    [PersonalDetailsScreen, [ReviewScreen]],
-    [CompanyDetailsScreen, [ReviewScreen]],
-    [ReviewScreen, [PlanScreen, SuccessScreen]],
-    [SuccessScreen, [WelcomeScreen]]
+    [FlowNode.Welcome, [FlowNode.Profile]],
+    [FlowNode.Profile, [FlowNode.Plan]],
+    [FlowNode.Plan, [FlowNode.PersonalDetails, FlowNode.CompanyDetails]],
+    [FlowNode.PersonalDetails, [FlowNode.Review]],
+    [FlowNode.CompanyDetails, [FlowNode.Review]],
+    [FlowNode.Review, [FlowNode.Plan, FlowNode.Success]],
+    [FlowNode.Success, [FlowNode.Welcome]]
   ] as const,
   {
-    initial: WelcomeScreen,
-    context: initialContext
+    initial: FlowNode.Welcome,
+    context: initialContext,
+    components: {
+      [FlowNode.Welcome]: WelcomeScreen,
+      [FlowNode.Profile]: ProfileScreen,
+      [FlowNode.Plan]: PlanScreen,
+      [FlowNode.PersonalDetails]: PersonalDetailsScreen,
+      [FlowNode.CompanyDetails]: CompanyDetailsScreen,
+      [FlowNode.Review]: ReviewScreen,
+      [FlowNode.Success]: SuccessScreen
+    }
   }
 );

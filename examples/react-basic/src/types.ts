@@ -1,4 +1,7 @@
 import type { Graph } from "@graphlet/core";
+import type { ReactNode } from "react";
+
+import type { FlowNode } from "./nodes";
 
 export type Plan = "personal" | "business";
 
@@ -34,11 +37,11 @@ export type Context = {
   completedAt: string | null;
 };
 
-export type ScreenComponent = (props: ScreenProps) => React.ReactNode;
-
-export type AppGraph = Graph<ScreenComponent, Payload, Context>;
+export type AppGraph = Graph<FlowNode, Payload, Context>;
 
 export type ScreenProps = {
   graph: AppGraph;
   snapshot: ReturnType<AppGraph["getSnapshot"]>;
 };
+
+export type ScreenComponent = (props: ScreenProps) => ReactNode;
