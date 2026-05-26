@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "npm run docs:dev",
     "build": "npm run build --workspaces",
-    "typecheck": "npm run typecheck --workspaces --if-present",
+    "typecheck": "npm run core:typecheck && npm run core:build && npm run react:typecheck",
     "test": "npm run test --workspaces --if-present",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
