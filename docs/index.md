@@ -2,22 +2,22 @@
 layout: home
 
 hero:
-  name: Flowcore
+  name: Graphlet
   text: Typed headless graph runtime
-  tagline: Build graph-based flows without UI lock-in.
+  tagline: Build graph-based flows with plain TypeScript or React Components.
   actions:
     - theme: brand
       text: Get Started
       link: /guide/getting-started
     - theme: alt
-      text: View API
-      link: /api/make-flow
+      text: React Adapter
+      link: /react/getting-started
 
 features:
   - title: Headless
-    details: No React, no Vue, no Svelte, no DOM. Flowcore only manages graph state.
-  - title: Typed by design
-    details: Nodes are inferred from your graph schema and reused across the runtime API.
-  - title: Runtime ready
-    details: Move between nodes, keep context, track history and subscribe to changes.
+    details: Graphlet manages graph state, transitions, context and history without knowing anything about UI
+  - title: Tuple-based graphs
+    details: Define graphs as tuples like `[node, nextNodes]`, where nodes can be strings, objects or components.
+  - title: React component graphs
+    details: In React, components can become graph nodes. Your components decide when and where to navigate.
 ---

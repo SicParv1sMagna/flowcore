@@ -1,45 +1,55 @@
 import { defineConfig } from "vitepress";
 
 export default defineConfig({
-    title: "Flowcore",
-    description: "Typed headless graph runtime",
+  base: "/graphlet/",
+  title: "Graphlet",
+  description: "Typed headless graph runtime",
 
-    themeConfig: {
-        nav: [
-            { text: "Guide", link: "/guide/getting-started" },
-            { text: "API", link: "/api/make-flow" }
-        ],
+  themeConfig: {
+    nav: [
+      { text: "Guide", link: "/guide/getting-started" },
+      { text: "React", link: "/react/getting-started" },
+      { text: "API", link: "/api/graph" }
+    ],
 
-        sidebar: [
-            {
-                text: "Guide",
-                items: [
-                    { text: "Getting started", link: "/guide/getting-started" },
-                    { text: "Core Concepts", link: "/guide/core-concepts" },
-                    { text: "Context", link: "/guide/context" },
-                    { text: "History", link: "/guide/history" },
-                    { text: "Subscriptions", link: "/guide/subscriptions" },
-                ]
-            },
-            {
-                text: "API",
-                items: [
-                    { text: "defineFlow", link: "/api/define-flow" },
-                    { text: "makeFlow", link: "/api/make-flow" },
-                    { text: "Graph", link: "/api/graph" },
-                ]
-            }
-        ],
-
-        search: {
-            provider: "local"
-        },
-
-        socialLinks: [
-            {
-                icon: "github",
-                link: "https://github.com/SicParv1sMagna/flowcore"
-            }
+    sidebar: [
+      {
+        text: "Guide",
+        items: [
+          { text: "Getting started", link: "/guide/getting-started" },
+          { text: "Core Concepts", link: "/guide/core-concepts" },
+          { text: "Context", link: "/guide/context" },
+          { text: "History", link: "/guide/history" },
+          { text: "Subscriptions", link: "/guide/subscriptions" }
         ]
-    }
+      },
+      {
+        text: "React",
+        items: [
+          { text: "Getting Started", link: "/react/getting-started" },
+          { text: "Component Graphs", link: "/react/component-graphs" },
+          { text: "GraphOutlet", link: "/react/graph-outlet" },
+          { text: "Demo", link: "/react/demo" }
+        ]
+      },
+      {
+        text: "API",
+        items: [
+          { text: "Graph", link: "/api/graph" },
+          { text: "React Adapter", link: "/api/react" }
+        ]
+      }
+    ],
+
+    search: {
+      provider: "local"
+    },
+
+    socialLinks: [
+      {
+        icon: "github",
+        link: "https://github.com/SicParv1sMagna/graphlet"
+      }
+    ]
+  }
 });

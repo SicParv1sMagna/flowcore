@@ -1,0 +1,298 @@
+:root {
+  color: #111827;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(99, 102, 241, 0.16),
+      transparent 32rem
+    ),
+    #f9fafb;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  background: #111827;
+  color: white;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease,
+    background 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: #1f2937;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: white;
+}
+
+pre {
+  overflow: auto;
+  max-height: 320px;
+  border-radius: 12px;
+  background: #111827;
+  color: #e5e7eb;
+  padding: 16px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+code {
+  border-radius: 6px;
+  background: #eef2ff;
+  color: #4338ca;
+  padding: 2px 6px;
+}
+
+.layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 460px;
+  gap: 24px;
+  padding: 32px;
+}
+
+.screen,
+.debug {
+  border: 1px solid #e5e7eb;
+  border-radius: 28px;
+  background: rgb(255 255 255 / 92%);
+  padding: 32px;
+  box-shadow: 0 24px 80px rgb(15 23 42 / 10%);
+  backdrop-filter: blur(12px);
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 640px;
+}
+
+.debug {
+  align-self: start;
+  position: sticky;
+  top: 32px;
+}
+
+.debugHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.debugHeader button {
+  padding: 8px 12px;
+  background: #4f46e5;
+  font-size: 13px;
+}
+
+.debugSection {
+  margin-top: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #6366f1;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0 0 16px;
+  max-width: 680px;
+  font-size: 48px;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+h2 {
+  margin: 0;
+}
+
+h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+.muted {
+  max-width: 640px;
+  color: #6b7280;
+  line-height: 1.7;
+}
+
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  background: #f9fafb;
+  padding: 18px;
+  color: #374151;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  max-width: 520px;
+}
+
+.field span {
+  color: #374151;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 680px;
+}
+
+.plan {
+  display: grid;
+  gap: 8px;
+  min-height: 140px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  color: #111827;
+  text-align: left;
+}
+
+.plan strong {
+  font-size: 18px;
+}
+
+.plan span {
+  color: #6b7280;
+}
+
+.plan.active {
+  border-color: #6366f1;
+  background: #eef2ff;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  border: 1px solid #e5e7eb;
+  background: white;
+  color: #111827;
+}
+
+.chip.active {
+  border-color: #6366f1;
+  background: #4f46e5;
+  color: white;
+}
+
+.summary {
+  display: grid;
+  max-width: 620px;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  background: white;
+}
+
+.summaryRow + .summaryRow {
+  border-top: 1px solid #e5e7eb;
+}
+
+.summaryRow span {
+  color: #6b7280;
+}
+
+.nodeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nodeList span {
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4338ca;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+@media (max-width: 980px) {
+  .layout {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .debug {
+    position: static;
+  }
+
+  .screen {
+    min-height: auto;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+
+  .plans {
+    grid-template-columns: 1fr;
+  }
+}

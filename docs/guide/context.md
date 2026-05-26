@@ -2,79 +2,90 @@
 
 Context is user-defined data stored inside the graph runtime.
 
-Flowcore does not interpret context. It only stores it, returns it in snapshots and notifies listeners when it changes.
+Graphlet does not interpret context. It only stores it, returns it in snapshots and notifies listeners when it changes.
 
 ## Create graph with context
 
-```typescript
-import { defineFlow, makeFlow } from "@flowcore/core";
+```ts
+import { Graph } from "@graphlet/core";
 
-const schema = defineFlow({
-    step1: ["step2"],
-    step2: []
-});
+type Node = "step1" | "step2";
 
-type Context = {
-    values: Record<string, unknown>;
-    completed: string[];
+type Payload = {
+  source: "button" | "keyboard";
 };
 
-const flow = makeFlow<typeof schema, unknown, Context>(schema, {
+type Context = {
+  values: Record<string, unknown>;
+  completed: Node[];
+};
+
+const graph = new Graph<Node, Payload, Context>(
+  [
+    ["step1", ["step2"]],
+    ["step2", []]
+  ],
+  {
     initial: "step1",
     context: {
-        values: {},
-        completed: [],
+      values: {},
+      completed: []
     }
-});
+  }
+);
 ```
 
 ## Read context
 
-```typescript
-flow.setContext({
-    values: {
-        answer: 42,
-    },
-    completed: ["step1"]
+```ts
+graph.getContext();
+```
+
+## Update context by value
+
+```ts
+graph.setContext({
+  values: {
+    answer: 42
+  },
+  completed: ["step1"]
 });
 ```
 
-## Update context with a function
+## Update context with function
 
-```typescript
-flow.setContext((ctx) => ({
-    ...ctx,
-    completed: [...ctx.completed, flow.current()]
-}))
+```ts
+graph.setContext((ctx) => ({
+  ...ctx,
+  completed: [...ctx.completed, graph.current()]
+}));
 ```
 
 ## Context in snapshot
 
-```typescript
-flow.getSnapshot();
+```ts
+graph.getSnapshot();
 ```
 
-```json
+```ts
 {
-    "current": "step1",
-        "next": ["step2"],
-        "context": {
-        "values": {},
-        "completed": []
-    },
-    "history": ["step1"]
+  current: "step1",
+  next: ["step2"],
+  context: {
+    values: {},
+    completed: []
+  },
+  history: ["step1"]
 }
 ```
 
 ## Context update event
 
-When context changes, subscribers receive a `context` event.
-
-```typescript
-flow.subscribe((snapshot, event) => {
-    if (event.type === "context") {
-        console.log(event.previousContext);
-        console.log(event.context);
-    }
-})
+```ts
+graph.subscribe((snapshot, event) => {
+  if (event.type === "context") {
+    console.log(event.previousContext);
+    console.log(event.context);
+  }
+});
 ```

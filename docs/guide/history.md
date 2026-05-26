@@ -1,93 +1,225 @@
 # History
 
-Flowcore keeps a history of visited nodes.
+Graphlet keeps a history of visited nodes.
 
-History is useful for wizard-like flows, screen graphs and back navigation.
+History is useful when you build step-by-step flows, screen graphs, wizards, onboarding flows or any interface where the user can move back to a previous node.
 
-## Read history
+## Basic example
 
-```typescript
-const flow = makeFlow(schema, {
-    inital: "step1"
-});
+```ts
+import { Graph } from "@graphlet/core";
 
-flow.getHistory();
+const graph = new Graph(
+  [
+    ["step1", ["step2", "step3"]],
+    ["step2", ["step4"]],
+    ["step3", []],
+    ["step4", []]
+  ] as const,
+  {
+    initial: "step1"
+  }
+);
+```
+
+When the graph is created, history starts with the initial node.
+
+```ts
+graph.getHistory();
 // ["step1"]
 ```
 
-## History after trnasitions
+## History after transitions
 
-```typescript
-flow.goTo("step2");
-flow.goTo("step3");
+Every successful transition adds the target node to history.
 
-flow.getHistory();
-// ["step1", "step2", "step3"]
+```ts
+graph.goTo("step2");
+graph.goTo("step4");
+
+graph.getHistory();
+// ["step1", "step2", "step4"]
 ```
 
-## Go back
+Failed transitions do not change history.
 
-```typescript
-flow.back();
+```ts
+graph.goTo("step3");
+// { ok: false, reason: "TRANSITION_NOT_ALLOWED", ... }
+
+graph.getHistory();
+// ["step1", "step2", "step4"]
+```
+
+## Check if back navigation is possible
+
+Use `canGoBack()` before rendering a back button.
+
+```ts
+graph.canGoBack();
+// true
 ```
 
 Example:
 
-```typescript
-flow.current();
-// "step4"
+```ts
+const canGoBack = graph.canGoBack();
 
-flow.back();
-
-flow.current();
-// "step3"
-```
-
-If there is no previous node, `back` returns a failure result:
-
-```json
-{
-  "ok": false,
-  "reason": "EMPTY_HISTORY",
-  "current": "step1"
+if (canGoBack) {
+  graph.back();
 }
 ```
 
-## Check if back is possible
+## Go back
 
-```typescript
-flow.canGoBack();
-// true or false
+`back()` moves the graph to the previous node in history.
+
+```ts
+graph.current();
+// "step4"
+
+graph.back();
+
+graph.current();
+// "step2"
+```
+
+The history is updated too:
+
+```ts
+graph.getHistory();
+// ["step1", "step2"]
+```
+
+## Back result
+
+When back navigation succeeds, `back()` returns:
+
+```ts
+{
+    ok: true,
+        from: "step4",
+        to: "step2",
+        current: "step2"
+}
+```
+
+When there is no previous node, it returns:
+
+```ts
+{
+    ok: false,
+        reason: "EMPTY_HISTORY",
+        current: "step1"
+}
+```
+
+So you can safely handle both cases:
+
+```ts
+const result = graph.back();
+
+if (!result.ok) {
+  console.log(result.reason);
+}
 ```
 
 ## Clear history
 
-```typescript
-flow.clearHistory();
-```
+`clearHistory()` keeps the current node but removes previous history.
 
-This keeps the current node and resets history to only that node.
+```ts
+graph.goTo("step2");
+graph.goTo("step4");
 
-```typescript
-flow.current();
-// "step4"
+graph.getHistory();
+// ["step1", "step2", "step4"]
 
-flow.clearHistory();
+graph.clearHistory();
 
-flow.getHistory();
+graph.getHistory();
 // ["step4"]
 ```
 
-## Reset
+After clearing history, `canGoBack()` returns `false`.
 
-`reset()` returns graph to the initial node and resets history.
+```ts
+graph.canGoBack();
+// false
+```
 
-```typescript
-flow.reset();
+## Reset and history
 
-flow.current();
+`reset()` moves the graph back to the initial node and resets history.
+
+```ts
+graph.goTo("step2");
+graph.goTo("step4");
+
+graph.reset();
+
+graph.current();
 // "step1"
 
-flow.getHistory();
+graph.getHistory();
 // ["step1"]
+```
+
+## History in snapshot
+
+History is included in every snapshot.
+
+```ts
+graph.getSnapshot();
+```
+
+```ts
+{
+    current: "step2",
+        next: ["step4"],
+        context: undefined,
+        history: ["step1", "step2"]
+}
+```
+
+## React usage
+
+In React, history can be used to render back navigation.
+
+```tsx
+function FormScreen({ graph }) {
+  const { snapshot } = useGraph(graph);
+
+  return (
+    <section>
+      <button onClick={() => graph.back()} disabled={!graph.canGoBack()}>
+        Back
+      </button>
+
+      <pre>{JSON.stringify(snapshot.history, null, 2)}</pre>
+    </section>
+  );
+}
+```
+
+## Notes
+
+History is updated only by successful transitions.
+
+These operations update history:
+
+```ts
+graph.goTo(target);
+graph.back();
+graph.clearHistory();
+graph.reset();
+```
+
+These operations do not add new history entries:
+
+```ts
+graph.setContext(nextContext);
+graph.getSnapshot();
+graph.getNext();
+graph.canGoTo(target);
 ```

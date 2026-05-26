@@ -1,0 +1,58 @@
+{
+  "name": "@graphlet/react",
+  "version": "0.1.0",
+  "description": "React adapter for Graphlet component graphs.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "homepage": "https://sicparv1smagna.github.io/graphlet/react/getting-started.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sicparv1smagna/graphlet.git",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/sicparv1smagna/graphlet/issues"
+  },
+  "keywords": [
+    "react",
+    "graph",
+    "flow",
+    "component-graph",
+    "headless",
+    "typescript"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "dependencies": {
+    "@graphlet/core": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^6.0.3"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  }
+}

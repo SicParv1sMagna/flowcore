@@ -1,61 +1,83 @@
 # Getting Started
 
-Flowcore is a small headless graph runtime.
+Graphlet is a small headless graph runtime.
 
-It does not render UI and does not depend on any framework. You defined graph, create a runtime instance and move through
-nodes.
+It does not render UI and does not depend on any framework. You create a graph from tuple entries and move through nodes.
 
 ## Install
 
 ```bash
-npm install @flowcore/core
+npm install @graphlet/core
 ```
 
-## Define a graph
+## Create a graph
 
-```typescript
-import { defineFlow, makeFlow } from "@flowcore/core";
+```ts
+import { Graph } from "@graphlet/core";
 
-const schema = defineFlow({
-    step1: ["step2", "step3"],
-    step2: [],
-    step3: ["step4", "step5"],
-    step4: ["step1"],
-    step5: [],
-})
-```
-
-`defineFlow` preserves literal node names and helps TypeScript infer the graph shape.
-
-## Create a runtime
-
-```typescript
-const flow = makeFlow(schema, {
+const graph = new Graph(
+  [
+    ["step1", ["step2", "step3"]],
+    ["step2", []],
+    ["step3", ["step4"]],
+    ["step4", ["step1"]]
+  ] as const,
+  {
     initial: "step1"
-})
+  }
+);
 ```
 
-## Move through the graph
+Each tuple has this shape:
 
-```typescript
-flow.current();
+```ts
+[node, nextNodes];
+```
+
+So this entry:
+
+```ts
+["step1", ["step2", "step3"]];
+```
+
+means:
+
+```txt
+step1 -> step2
+step1 -> step3
+```
+
+## Read current node
+
+```ts
+graph.current();
 // "step1"
-
-flow.getNext();
-// ["step2", "step3"]
-
-flow.goTo("step3")
-// { ok: true, from: "step1", to: "step3", current: "step3" }
-
-flow.current();
-// "step3"
 ```
 
-## Invalid transitions
+## Read next nodes
 
-Flowcore only allows transitions that exist in your graph.
+```ts
+graph.getNext();
+// ["step2", "step3"]
+```
 
-```typescript
+## Move to another node
+
+```ts
+graph.goTo("step3");
+// {
+//   ok: true,
+//   from: "step1",
+//   to: "step3",
+//   current: "step3"
+// }
+```
+
+## Invalid transition
+
+Graphlet only allows transitions that exist in the graph.
+
+```ts
 graph.goTo("step2");
 // {
 //   ok: false,
@@ -65,15 +87,17 @@ graph.goTo("step2");
 // }
 ```
 
-## Subscribe to changes
+## Snapshot
 
-```typescript
-const unsubscribe = graph.subscribe((snapshot, event) => {
-    console.log(snapshot.current);
-    console.log(event.type);
-});
+```ts
+graph.getSnapshot();
+```
 
-graph.goTo("step4");
-
-unsubscribe();
+```ts
+{
+  current: "step3",
+  next: ["step4"],
+  context: undefined,
+  history: ["step1", "step3"]
+}
 ```

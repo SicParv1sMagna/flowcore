@@ -1,6 +1,6 @@
 {
-  "name": "@flowcore/core",
-  "version": "0.0.1",
+  "name": "@graphlet/core",
+  "version": "0.1.2",
   "description": "Tiny headless graph runtime",
   "type": "module",
   "main": "./dist/index.js",
@@ -13,7 +13,9 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -32,5 +34,14 @@
   "devDependencies": {
     "typescript": "^6.0.3",
     "vitest": "^4.1.7"
+  },
+  "homepage": "https://sicparv1smagna.github.io/graphlet/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sicparv1smagna/graphlet.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/sicparv1smagna/graphlet/issues"
   }
 }
